@@ -2,13 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Select, Input, Button, Form, message,Image } from 'antd';
 import axios from 'axios';
 import 'tailwindcss/tailwind.css';
-import LoginImage from "../assets/loginImg2.jpg"
+import LoginImage from "../assets/loginImg3.png"
+import { useNavigate } from 'react-router-dom';
 const { Option } = Select;
 
 const Login = () => {
   const [branches, setBranches] = useState([]);
   const [users, setUsers] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState(null);
+
+  const navigate = useNavigate();
+
+  const handleOnClick = () => {
+    // You can add any login logic here if needed
+    navigate('/dashboard');
+  };
 
   useEffect(() => {
     // Fetch branches when the component loads
@@ -93,7 +101,7 @@ const Login = () => {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" className="w-full mt-4 bg-purple-600">
+              <Button type="primary" htmlType="submit" className="w-full mt-4 bg-purple-600" onClick={handleOnClick}>
                 Login
               </Button>
               <span>Don't have an Account? <a href='/signup' className='font-semibold pt-3 text-blue-600' >Sign Up</a></span>
