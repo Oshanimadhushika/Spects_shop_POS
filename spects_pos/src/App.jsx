@@ -5,6 +5,7 @@ import RegisterUser from './pages/RegisterUser';
 import Dashboard from './pages/Dashboard';
 import Branch from './pages/Branch';
 import Admin from './pages/Admin';
+import ItemMaster from './pages/ItemMaster';
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
       <Route path="/user-register" element={<RegisterUser />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/branch" element={<Branch />} />
+      <Route path="/item-master" element={<ItemMaster />} />
+
 
 
 
