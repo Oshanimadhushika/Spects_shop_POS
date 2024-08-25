@@ -6,6 +6,9 @@ import Dashboard from './pages/Dashboard';
 import Branch from './pages/Branch';
 import Admin from './pages/Admin';
 import ItemMaster from './pages/ItemMaster';
+import PurchasingInvoice from './pages/GoodRecive';
+import PrescriptionInvoice from './pages/PrescriptionInvoice';
+import CustomerRegister from './pages/CustomerRegister';
 
 function App() {
   return (
@@ -18,9 +21,15 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/branch" element={<Branch />} />
       <Route path="/item-master" element={<ItemMaster />} />
+      <Route path="/good-receive-notes" element={<PurchasingInvoice />} />
+      <Route path="/prescription-invoice" element={<PrescriptionInvoice />} />
+      <Route path="/custom-register" element={<CustomerRegister />} />
 
 
 
+
+
+     
 
       
     </Routes>

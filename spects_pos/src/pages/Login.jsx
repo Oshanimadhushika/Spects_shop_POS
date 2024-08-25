@@ -49,12 +49,15 @@ const Login = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 w-2/3 mt-5">
-      <div className="grid grid-cols-12 gap-4 p-5 shadow-xl">
+    <div className=" p-4 w-full mt-5 flex justify-center items-center ">
+      <div className="grid grid-cols-12 gap-4 p-5 shadow-xl justify-center items-center w-2/3 rounded-xl">
         <div className="col-span-5 flex justify-center">
           <img src={LoginImage} alt="Image" className="w-full" />
         </div>
-        <div className="col-span-7 flex justify-center p-8">
+        <div className="col-span-7  justify-center p-8">
+        <h1 className="text-2xl font-bold mb-4 text-center font-sans">
+              Login !
+            </h1>
           <Form
             layout="vertical"
             onFinish={handleLogin}
@@ -104,7 +107,7 @@ const Login = () => {
               <Button type="primary" htmlType="submit" className="w-full mt-4 bg-purple-600" onClick={handleOnClick}>
                 Login
               </Button>
-              <span>Don't have an Account? <a href='/signup' className='font-semibold pt-3 text-blue-600' >Sign Up</a></span>
+              <span className='mt-6'>Don't have an Account? <a href='/signup' className='font-semibold pt-3 text-blue-600' >Sign Up</a></span>
             </Form.Item>
           </Form>
         </div>

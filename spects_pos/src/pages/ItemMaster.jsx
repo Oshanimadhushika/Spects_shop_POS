@@ -90,8 +90,8 @@ const ItemMaster = () => {
     { title: "Discount Rs", dataIndex: "discountRs", key: "discountRs" },
     { title: "Wholesale", dataIndex: "wholesale", key: "wholesale" },
     { title: "Location", dataIndex: "location", key: "location" },
-    { title: "Max Stock Qty", dataIndex: "maxStockQty", key: "maxStockQty" },
-    { title: "Min Stock Qty", dataIndex: "minStockQty", key: "minStockQty" },
+    { title: "MaxStockQty", dataIndex: "maxStockQty", key: "maxStockQty" },
+    { title: "MinStockQty", dataIndex: "minStockQty", key: "minStockQty" },
   ];
 
   const onRowClick = (record) => {
@@ -100,7 +100,7 @@ const ItemMaster = () => {
   };
 
   return (
-    <div className="bg-gray-200  p-4 w-full max-h-full ">
+    <div className="bg-white  p-4 w-full max-h-full ">
       <div className="grid grid-cols-12 gap-4  w-full">
         {/* Header Title */}
         <div className="col-span-10 flex items-center">
@@ -129,7 +129,7 @@ const ItemMaster = () => {
         </Form>
       </Form.Item>
 
-      <div className="p-5 bg-white justify-center rounded-xl shadow-xl">
+      <div className="p-5 bg-gray-200 justify-center rounded-xl shadow-xl">
         <Form
           form={form}
           layout="vertical"
@@ -331,14 +331,14 @@ const ItemMaster = () => {
         </Form>
 
         <Table
-        className=""
+        className="whitespace-nowrap text-xs"
           columns={columns}
           dataSource={items}
           rowKey="code"
           onRow={(record) => ({
             onClick: () => onRowClick(record),
           })}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'max-content',y: '100%' }}
         />
       </div>
     </div>

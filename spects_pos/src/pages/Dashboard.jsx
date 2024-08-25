@@ -21,6 +21,8 @@ import Barcode from "../assets/images/dashboard/barcode-scanner.png";
 import Video from "../assets/images/dashboard/video.png";
 import PenBackup from "../assets/images/dashboard/pendrive.png";
 import Exit from "../assets/images/dashboard/exit.png";
+import CartoonPerson from "../assets/images/dashboard/carttongirl.png";
+
 // import ItemIcon from "../assets/images/dashboard/item.png";
 
 // import AdminIcon from "../assets/images/dashboard/admin.png";
@@ -209,7 +211,16 @@ const Dashboard = () => {
             />
           ))}
         </div>
+
+
       </div>
+
+      <img
+          src={CartoonPerson}
+          alt="Cartoon Person"
+          className="absolute bottom-0 right-0 w-[300px] h-auto"
+          style={{ zIndex: -1 }}
+        />
     </div>
   );
 };
