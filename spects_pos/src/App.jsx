@@ -9,6 +9,7 @@ import ItemMaster from './pages/ItemMaster';
 import PurchasingInvoice from './pages/GoodRecive';
 import PrescriptionInvoice from './pages/PrescriptionInvoice';
 import CustomerRegister from './pages/CustomerRegister';
+import Settings from './pages/Setting';
 
 function App() {
   return (
@@ -24,12 +25,13 @@ function App() {
       <Route path="/good-receive-notes" element={<PurchasingInvoice />} />
       <Route path="/prescription-invoice" element={<PrescriptionInvoice />} />
       <Route path="/custom-register" element={<CustomerRegister />} />
+      <Route path="/settings" element={<Settings />} />
 
 
 
 
 
-     
+      
 
       
     </Routes>
