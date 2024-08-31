@@ -45,8 +45,13 @@ const PrescriptionInvoice = () => {
   };
 
   const handleRefresh = () => {
-    const regNo = form.getFieldValue("regNo");
+    // const regNo = form.getFieldValue("regNo");
+    
+    // Perform any additional actions you need before refreshing the page
     // Fetch updated customer data and job history
+  
+    // Refresh the page
+    window.location.reload();
   };
 
   const handleShowData = () => {

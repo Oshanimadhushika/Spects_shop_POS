@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, DatePicker, Select, Col ,Row} from "antd";
+import { Form, Input, Button, DatePicker, Select, Col, Row } from "antd";
 import "antd/dist/reset.css";
 import "tailwindcss/tailwind.css";
 import { Link } from "react-router-dom";
@@ -13,6 +13,29 @@ const CustomerRegister = () => {
   const onFinish = (values) => {
     console.log("Form values:", values);
     // Add your form submission logic here
+  };
+  const handleDelete = async () => {
+    // if (!selectedItem) {
+    //   message.warning('Please select an item');
+    //   return;
+    // }
+    //     try {
+    //       await axios.post('/api/deleteItem', { itemCode: selectedItem.itemCode });
+    //       message.success('Item deleted successfully');
+    //       form.resetFields();
+    //       setSelectedItem(null);
+    //     } catch (error) {
+    //       message.error('Delete failed');
+    //     }
+  };
+
+  const handleSearch = async (values) => {
+    // try {
+    //   const res = await axios.post('/api/searchItems', { keyword: values.keyword });
+    //   setItems(res.data);
+    // } catch (error) {
+    //   message.error('Search failed');
+    // }
   };
 
   return (
@@ -43,14 +66,17 @@ const CustomerRegister = () => {
         <div className="col-md-6">
           <Form form={form} onFinish={onFinish} className="mt-3">
             <div className="flex items-center">
-              <Form.Item
-                name="keyword"
-                rules={[{ required: true, message: "Please enter a keyword!" }]}
-              >
-                <Input
-                  placeholder="Search..."
-                  className="bg-white rounded-full shadow-xl"
-                />
+              <Form.Item>
+                <Form layout="inline" onFinish={handleSearch}>
+                  <Form.Item name="keyword">
+                    <Input placeholder="Search..." />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                      Search
+                    </Button>
+                  </Form.Item>
+                </Form>
               </Form.Item>
               <Button
                 type="link"
@@ -110,8 +136,6 @@ const CustomerRegister = () => {
               <Input />
             </Form.Item>
           </Col>
-
-         
         </Row>
 
         <Row gutter={16}>
@@ -165,7 +189,7 @@ const CustomerRegister = () => {
               <Input />
             </Form.Item>
           </Col>
-{/* 
+          {/* 
           <Form.Item
               name="area"
               label="Area"
@@ -176,11 +200,10 @@ const CustomerRegister = () => {
                 <Option value="Main Area">Main Area</Option>
               </Select>
             </Form.Item> */}
-         
         </Row>
 
         <Row gutter={16}>
-        <Col span={8}>
+          <Col span={8}>
             <Form.Item
               name="address1"
               label="Address Line 1"
@@ -190,18 +213,18 @@ const CustomerRegister = () => {
                   message: "Please enter the first address line!",
                 },
               ]}
-               className="mb-0"
+              className="mb-0"
             >
               <Input />
             </Form.Item>
-            <Form.Item name="address2" label="Address Line 2"  className="mb-0">
-              <Input  />
+            <Form.Item name="address2" label="Address Line 2" className="mb-0">
+              <Input />
             </Form.Item>
-            <Form.Item name="address3" label="Address Line 3"  className="mb-0">
+            <Form.Item name="address3" label="Address Line 3" className="mb-0">
               <Input />
             </Form.Item>
           </Col>
-         
+
           <Col span={8}>
             <Form.Item
               name="area"
@@ -214,14 +237,31 @@ const CustomerRegister = () => {
               </Select>
             </Form.Item>
           </Col>
-          
         </Row>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className="w-1/3 flex justify-center mt-5">
-            Save Customer
-          </Button>
-        </Form.Item>
+        <Form.Item className="mt-5">
+            <Button type="primary" htmlType="submit" className="mr-2 bg-purple-500 hover:bg-blue-500 text-white font-semibold p-3 rounded-md">
+              Submit
+            </Button>
+            <Button
+              type="default"
+              // onClick={() => form.resetFields()}
+              className="mr-2 border-2 border-green-600 text-green-600"
+            >
+              Update
+            </Button>
+            <Button
+              type="default"
+              onClick={() => form.resetFields()}
+              className="mr-2 border-2 border-blue-600 text-blue-600"
+            >
+              Clear
+            </Button>
+            <Button type="danger" onClick={handleDelete} className="mr-2 border-2 border-red-500 text-red-500">
+              Delete
+            </Button>
+          </Form.Item>
+       
       </Form>
     </div>
   );

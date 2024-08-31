@@ -10,6 +10,7 @@ import PurchasingInvoice from './pages/GoodRecive';
 import PrescriptionInvoice from './pages/PrescriptionInvoice';
 import CustomerRegister from './pages/CustomerRegister';
 import Settings from './pages/Setting';
+import BalanceBill from './pages/BalanceBill';
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
       <Route path="/prescription-invoice" element={<PrescriptionInvoice />} />
       <Route path="/custom-register" element={<CustomerRegister />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/balance-bill" element={<BalanceBill />} />
+
 
 
 

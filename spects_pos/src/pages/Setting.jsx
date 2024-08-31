@@ -4,6 +4,8 @@ import 'tailwindcss/tailwind.css'; // Ensure Tailwind CSS is imported
 import Department from './Department';
 import { Link } from 'react-router-dom';
 import { FaHome } from 'react-icons/fa';
+import Supplier from './Supplier';
+import Category from './Category';
 
 const Settings = () => {
   const [selectedValue, setSelectedValue] = useState('supplier');
@@ -15,11 +17,11 @@ const Settings = () => {
   const renderContent = () => {
     switch (selectedValue) {
       case 'supplier':
-        return  <Department />;
+        return  <Supplier />;
       case 'department':
         return  <Department />;
       case 'category':
-        return  <Department />;
+        return  <Category />;
       default:
         return '';
     }

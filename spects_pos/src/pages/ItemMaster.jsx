@@ -225,7 +225,7 @@ const ItemMaster = () => {
                 name="cost"
                 rules={[{ required: true, message: "Please input cost!" }]}
               >
-                <Input type="number" placeholder="Enter  Cost " />
+                <Input type="number" placeholder="Enter  Cost " className="w-1/2"/>
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -234,7 +234,7 @@ const ItemMaster = () => {
                 name="profit"
                 rules={[{ required: true, message: "Please input profit!" }]}
               >
-                <Input type="number" placeholder="Enter  Profit " />
+                <Input type="number" placeholder="Enter  Profit " className="w-1/2"/>
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -245,7 +245,7 @@ const ItemMaster = () => {
                   { required: true, message: "Please input sales price!" },
                 ]}
               >
-                <Input placeholder="Enter  Sales Price " />
+                <Input placeholder="Enter  Sales Price " className="w-1/2"/>
               </Form.Item>
             </Col>
           </Row>
@@ -259,7 +259,7 @@ const ItemMaster = () => {
                   { required: true, message: "Please input discount amount!" },
                 ]}
               >
-                <Input placeholder="Enter  Discount " />
+                <Input placeholder="Enter  Discount " className="w-1/2"/>
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -268,7 +268,7 @@ const ItemMaster = () => {
                 name="wholesale"
                 rules={[{ required: true, message: "Please input wholesale!" }]}
               >
-                <Input placeholder="Enter  Wholesale " />
+                <Input placeholder="Enter  Wholesale " className="w-1/2" />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -277,7 +277,7 @@ const ItemMaster = () => {
                 name="location"
                 rules={[{ required: true, message: "Please input location!" }]}
               >
-                <Input placeholder="Enter  Location "/>
+                <Input placeholder="Enter  Location " className="w-1/2"/>
               </Form.Item>
             </Col>
           </Row>
@@ -294,7 +294,7 @@ const ItemMaster = () => {
                   },
                 ]}
               >
-                <Input placeholder="Enter  Maximum stock quantity "/>
+                <Input placeholder="Enter  Maximum stock quantity " className="w-1/2"/>
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -308,7 +308,7 @@ const ItemMaster = () => {
                   },
                 ]}
               >
-                <Input placeholder="Enter  minimum stock quantity "/>
+                <Input placeholder="Enter  minimum stock quantity " className="w-1/2"/>
               </Form.Item>
             </Col>
           </Row>
