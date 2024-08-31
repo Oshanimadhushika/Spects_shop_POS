@@ -187,7 +187,7 @@ const Dashboard = () => {
       color: "bg-[#B0E57C]",
       icon: <img src={Exit} alt="Exit" className="w-full h-full" />,
       title: "Exit",
-      url: "/exit",
+      url: "/",
     },
   ];
 
