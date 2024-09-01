@@ -107,7 +107,7 @@ const Login = () => {
               <Button type="primary" htmlType="submit" className="w-full mt-4 bg-purple-600" onClick={handleOnClick}>
                 Login
               </Button>
-              <span className='mt-6'>Don't have an Account? <a href='/signup' className='font-semibold pt-3 text-blue-600' >Sign Up</a></span>
+              {/* <span className='mt-6'>Don't have an Account? <a href='/admin' className='font-semibold pt-3 text-blue-600' >Sign Up</a></span> */}
             </Form.Item>
           </Form>
         </div>

@@ -11,6 +11,8 @@ import PrescriptionInvoice from './pages/PrescriptionInvoice';
 import CustomerRegister from './pages/CustomerRegister';
 import Settings from './pages/Setting';
 import BalanceBill from './pages/BalanceBill';
+import OtherSales from './pages/OtherSale';
+import Return from './pages/Return';
 
 function App() {
   return (
@@ -28,6 +30,10 @@ function App() {
       <Route path="/custom-register" element={<CustomerRegister />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/balance-bill" element={<BalanceBill />} />
+      <Route path="/other-sales" element={<OtherSales />} />
+      <Route path="/return" element={<Return />} />
+
+
 
 
 

@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
-import { Input, Button, Form, Table, notification } from 'antd';
-import { SearchOutlined, SaveOutlined, DeleteOutlined, EditOutlined, ClearOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import React, { useState } from "react";
+import { Input, Button, Form, Table, notification } from "antd";
+import {
+  SearchOutlined,
+  SaveOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  ClearOutlined,
+} from "@ant-design/icons";
+import axios from "axios";
 
 const Category = () => {
   const [form] = Form.useForm();
@@ -18,20 +24,20 @@ const Category = () => {
     const { keyword } = values;
 
     if (!keyword) {
-      openNotification('warning', 'Keyword should not be Empty..!');
+      openNotification("warning", "Keyword should not be Empty..!");
       return;
     }
 
     try {
-      const response = await axios.post('/api/searchCategory', { keyword });
+      const response = await axios.post("/api/searchCategory", { keyword });
       const { data } = response;
       if (data.length === 0) {
-        openNotification('warning', 'No results found..!');
+        openNotification("warning", "No results found..!");
       } else {
         setCategories(data);
       }
     } catch (error) {
-      openNotification('error', 'Something went wrong..!');
+      openNotification("error", "Something went wrong..!");
     }
   };
 
@@ -39,17 +45,20 @@ const Category = () => {
     const { categoryCode, category } = values;
 
     if (!categoryCode || !category) {
-      openNotification('warning', 'Input Should not be Empty..!');
+      openNotification("warning", "Input Should not be Empty..!");
       return;
     }
 
     try {
-      await axios.post('/api/saveCategory', { id: categoryCode, name: category });
-      openNotification('success', 'Category Saved Successfully..!');
+      await axios.post("/api/saveCategory", {
+        id: categoryCode,
+        name: category,
+      });
+      openNotification("success", "Category Saved Successfully..!");
       form.resetFields();
       setCategories([]);
     } catch (error) {
-      openNotification('error', 'Something went wrong..!');
+      openNotification("error", "Something went wrong..!");
     }
   };
 
@@ -57,17 +66,20 @@ const Category = () => {
     const { categoryCode, category } = values;
 
     if (!categoryCode || !category) {
-      openNotification('warning', 'Input Should not be Empty..!');
+      openNotification("warning", "Input Should not be Empty..!");
       return;
     }
 
     try {
-      await axios.post('/api/updateCategory', { id: categoryCode, name: category });
-      openNotification('success', 'Category Updated Successfully..!');
+      await axios.post("/api/updateCategory", {
+        id: categoryCode,
+        name: category,
+      });
+      openNotification("success", "Category Updated Successfully..!");
       form.resetFields();
       setCategories([]);
     } catch (error) {
-      openNotification('error', 'Something went wrong..!');
+      openNotification("error", "Something went wrong..!");
     }
   };
 
@@ -75,17 +87,17 @@ const Category = () => {
     const { categoryCode } = form.getFieldsValue();
 
     if (!categoryCode) {
-      openNotification('warning', 'Code should not be Empty..!');
+      openNotification("warning", "Code should not be Empty..!");
       return;
     }
 
     try {
-      await axios.post('/api/deleteCategory', { id: categoryCode });
-      openNotification('success', 'Category Deleted Successfully..!');
+      await axios.post("/api/deleteCategory", { id: categoryCode });
+      openNotification("success", "Category Deleted Successfully..!");
       form.resetFields();
       setCategories([]);
     } catch (error) {
-      openNotification('error', 'Something went wrong..!');
+      openNotification("error", "Something went wrong..!");
     }
   };
 
@@ -100,59 +112,103 @@ const Category = () => {
   return (
     <div className="w-full  items-center justify-center p-4 ">
       <div className=" w-full bg-gray-200 justify-center rounded-xl shadow-xl p-4">
-      <div className="mb-2 flex justify-between items-center">
+        <div className="mb-2 flex justify-between items-center">
           <h1 className="text-md font-semibold">
             Category <span className="text-red-500">Master</span>
           </h1>
           <Form form={form} layout="inline" onFinish={handleSearch}>
-          <Form.Item name="keyword">
-            <Input placeholder="Search..." className="rounded-full shadow-xl" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" icon={<SearchOutlined />} />
-          </Form.Item>
-        </Form>
+            <Form.Item name="keyword">
+              <Input
+                placeholder="Search..."
+                className="rounded-full shadow-xl"
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                icon={<SearchOutlined />}
+              />
+            </Form.Item>
+          </Form>
         </div>
 
-      <Form form={form} layout="vertical" onFinish={selectedCategory ? handleUpdate : handleSave} requiredMark={false}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={selectedCategory ? handleUpdate : handleSave}
+          requiredMark={false}
+        >
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Form.Item label="Code:" name="categoryCode" rules={[{ required: true, message: 'Please input the Code!' }]}>
             <Input />
           </Form.Item>
           <Form.Item label="Category:" name="category" rules={[{ required: true, message: 'Please input the Category!' }]}>
             <Input />
           </Form.Item>
+        </div> */}
+
+          <div className="flex flex-col gap-4">
+            <Form.Item
+              label="Code:"
+              name="categoryCode"
+              rules={[{ required: true, message: "Please input the Code!" }]}
+            >
+              <Input className="w-1/4" />
+            </Form.Item>
+            <Form.Item
+              label="Category:"
+              name="category"
+              rules={[
+                { required: true, message: "Please input the Category!" },
+              ]}
+            >
+              <Input className="w-1/4" />
+            </Form.Item>
+          </div>
+
+          <div className="flex justify-end space-x-2 mt-4">
+            <Button
+              type="primary"
+              htmlType="submit"
+              icon={<SaveOutlined />}
+              className="bg-blue-600"
+            >
+              {selectedCategory ? "Update" : "Submit"}
+            </Button>
+            <Button
+              onClick={() => form.resetFields()}
+              icon={<ClearOutlined />}
+              className="bg-yellow-500"
+            >
+              Clear
+            </Button>
+            <Button
+              danger
+              onClick={handleDelete}
+              icon={<DeleteOutlined />}
+              className="bg-red-500"
+            >
+              Delete
+            </Button>
+          </div>
+        </Form>
+
+        <div className="max-h-44 overflow-y-auto mt-4">
+          <Table
+            dataSource={categories}
+            columns={[
+              { title: "Code", dataIndex: "id", key: "id" },
+              { title: "Category", dataIndex: "name", key: "name" },
+            ]}
+            rowKey="id"
+            onRow={(record) => ({
+              onClick: () => handleRowClick(record),
+            })}
+            scroll={{ x: "max-content" }}
+          />
         </div>
-        <div className="flex justify-end space-x-2 mt-4">
-          <Button type="primary" htmlType="submit" icon={<SaveOutlined />} className="bg-blue-600">
-            {selectedCategory ? 'Update' : 'Submit'}
-          </Button>
-          <Button onClick={() => form.resetFields()} icon={<ClearOutlined />} className="bg-yellow-500">
-            Clear
-          </Button>
-          <Button danger onClick={handleDelete} icon={<DeleteOutlined />} className="bg-red-500">
-            Delete
-          </Button>
-        </div>
-      </Form>
-
-      <div className="max-h-44 overflow-y-auto mt-4">
-        <Table
-          dataSource={categories}
-          columns={[
-            { title: 'Code', dataIndex: 'id', key: 'id' },
-            { title: 'Category', dataIndex: 'name', key: 'name' },
-          ]}
-          rowKey="id"
-          onRow={(record) => ({
-            onClick: () => handleRowClick(record),
-          })}
-          scroll={{ x: "max-content" }}
-
-        />
       </div>
-      </div>
-
     </div>
   );
 };
