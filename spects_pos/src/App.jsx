@@ -13,6 +13,7 @@ import Settings from './pages/Setting';
 import BalanceBill from './pages/BalanceBill';
 import OtherSales from './pages/OtherSale';
 import Return from './pages/Return';
+import Visitors from './pages/Visitors';
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
       <Route path="/balance-bill" element={<BalanceBill />} />
       <Route path="/other-sales" element={<OtherSales />} />
       <Route path="/return" element={<Return />} />
+      <Route path="/visitors" element={<Visitors />} />
+
 
 
 
