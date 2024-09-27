@@ -22,6 +22,8 @@ import Video from "../assets/images/dashboard/video.png";
 import PenBackup from "../assets/images/dashboard/pendrive.png";
 import Exit from "../assets/images/dashboard/exit.png";
 import CartoonPerson from "../assets/images/dashboard/carttongirl.png";
+import BackgroundImg from "../assets/bg.jpg";
+
 
 // import ItemIcon from "../assets/images/dashboard/item.png";
 
@@ -127,7 +129,7 @@ const Dashboard = () => {
         <img src={Bill} alt="Claim Bills" className="w-full h-full" />
       ),
       title: "Claim Bills",
-      url: "/claim-bills",
+      url: "/claim-bil",
     },
     {
       color: "bg-[#B0BEC5]",
@@ -192,14 +194,16 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="justify-center w-full h-full mx-auto p-5 md:p-10 lg:p-10 xl:p-10 xl:pt-2 lg:pt-2 md:pt-2 sm:p-5">
+    <div className="justify-center w-full h-screen mx-auto p-5 md:p-10 lg:p-10 xl:p-10 xl:pt-2 lg:pt-2 md:pt-2 sm:p-5"
+    // style={{ backgroundImage: `url(${BackgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'center',height:'100%' }}
+    >
       <div className="flex justify-start pl-3 pt-2">
         <Title level={1} className="flex page-title gap-1 items-center font-bold whitespace-nowrap">
           Da<span className="text-purple-700 inline-block">sh</span>board
         </Title>
       </div>
 
-      <div className="flex flex-col gap-9 p-5 mx-auto sm:p-5 max-w-[1440px]">
+      <div className="flex flex-col gap-9 p-5 mx-auto sm:p-5 ">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {dashboardOptions.map((option, index) => (
             <DashboardOption

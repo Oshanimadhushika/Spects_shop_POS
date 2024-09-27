@@ -17,6 +17,7 @@ import Visitors from './pages/Visitors';
 import JobStatus from './pages/JobStatus';
 import StockAdjust from './pages/StockAdjust';
 import Expenses from './pages/Expenses';
+import ClaimBill from './pages/ClaimBill';
 
 function App() {
   return (
@@ -40,6 +41,8 @@ function App() {
       <Route path="/job-status" element={<JobStatus />} />
       <Route path="/stock-adjust" element={<StockAdjust />} />
       <Route path="/expenses" element={<Expenses />} />
+      <Route path="/claim-bil" element={<ClaimBill />} />
+
 
 
 
