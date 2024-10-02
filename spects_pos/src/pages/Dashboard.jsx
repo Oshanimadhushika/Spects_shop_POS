@@ -22,7 +22,9 @@ import Video from "../assets/images/dashboard/video.png";
 import PenBackup from "../assets/images/dashboard/pendrive.png";
 import Exit from "../assets/images/dashboard/exit.png";
 import CartoonPerson from "../assets/images/dashboard/carttongirl.png";
-import BackgroundImg from "../assets/bg.jpg";
+import bgDash from "../assets/bgDash.png";
+// import bgDash2 from "../assets/bg.jpg";
+
 
 
 // import ItemIcon from "../assets/images/dashboard/item.png";
@@ -197,9 +199,20 @@ const Dashboard = () => {
     <div className="justify-center w-full h-screen mx-auto p-5 md:p-10 lg:p-10 xl:p-10 xl:pt-2 lg:pt-2 md:pt-2 sm:p-5"
     // style={{ backgroundImage: `url(${BackgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'center',height:'100%' }}
     >
+       {/* <img
+          src={bgDash}
+          alt="Cartoon Person"
+          className="absolute top-0 left-0 w-[300px] h-auto"
+          style={{ zIndex: -1 }}
+        /> */}
+
+
       <div className="flex justify-start pl-3 pt-2">
         <Title level={1} className="flex page-title gap-1 items-center font-bold whitespace-nowrap">
-          Da<span className="text-purple-700 inline-block">sh</span>board
+          {/* Vision<span className="text-purple-700 inline-block">Soft</span>    Da<span className="text-purple-700 inline-block">sh</span>board */}
+          <span>
+  Vi<span className="text-purple-700 inline-block">si</span>onSoft&nbsp;Da<span className="text-purple-700 inline-block">sh</span>board
+</span>
         </Title>
       </div>
 
@@ -220,9 +233,16 @@ const Dashboard = () => {
       </div>
 
       <img
-          src={CartoonPerson}
+          src={bgDash}
           alt="Cartoon Person"
-          className="absolute bottom-0 right-0 w-[300px] h-auto"
+          className="absolute bottom-4 right-16 w-[300px] h-auto"
+          style={{ zIndex: -1 }}
+        />
+
+      <img
+          src={bgDash}
+          alt="Cartoon Person"
+          className="absolute bottom-0 right-0 w-[400px] h-auto mt-3"
           style={{ zIndex: -1 }}
         />
     </div>
