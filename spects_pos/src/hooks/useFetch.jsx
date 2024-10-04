@@ -8,7 +8,9 @@ const useFetch = () => {
   const [fetchError, setFetchError] = useState(null);
   const { notifyError } = useNotification();
 
-  const baseUrl = import.meta.env.VITE_API_URL; // Make sure your .env file has this
+  // const baseUrl = import.meta.env.VITE_API_URL;
+  
+  const baseUrl ="https://e309c61c-e0ce-4d50-990a-07ca33ccf84c.mock.pstmn.io/"
 
   // Simplified error handling
   const serverErrorHandle = (err) => {

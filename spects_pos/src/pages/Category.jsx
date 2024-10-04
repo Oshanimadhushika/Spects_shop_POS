@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, Button, Form, Table, notification } from "antd";
 import {
   SearchOutlined,
@@ -8,11 +8,47 @@ import {
   ClearOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
+import useFetch from "../hooks/useFetch";
+import useNotification from "../hooks/useNotification";
 
 const Category = () => {
   const [form] = Form.useForm();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
+  const [loading, setLoading] = useState(false);
+  const { notifyError, notifySuccess } = useNotification();
+
+  const handleSave = (values) => {
+    setLoading(true);
+    const data = {
+      code: values.categoryCode,
+      categoryName: values.category,
+    };
+
+    console.log("data",data);
+    
+
+    fetchAction({
+      query: `v1.0/category/add`,
+      params: data,
+      method: "get",
+    });
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (fetchData) {
+      if (fetchData.success === true) {
+        // navigate("/workspace/subscription-plans");
+        notifySuccess("Branch Saved Successfully!");
+      } else {
+        notifyError(fetchData.message);
+      }
+    }
+  }, [fetchData, fetchError]);
 
   const openNotification = (type, message) => {
     notification[type]({
@@ -41,65 +77,67 @@ const Category = () => {
     }
   };
 
-  const handleSave = async (values) => {
-    const { categoryCode, category } = values;
 
-    if (!categoryCode || !category) {
-      openNotification("warning", "Input Should not be Empty..!");
-      return;
-    }
 
-    try {
-      await axios.post("/api/saveCategory", {
-        id: categoryCode,
-        name: category,
-      });
-      openNotification("success", "Category Saved Successfully..!");
-      form.resetFields();
-      setCategories([]);
-    } catch (error) {
-      openNotification("error", "Something went wrong..!");
-    }
-  };
+  // const handleSave = async (values) => {
+  //   const { categoryCode, category } = values;
 
-  const handleUpdate = async (values) => {
-    const { categoryCode, category } = values;
+  //   if (!categoryCode || !category) {
+  //     openNotification("warning", "Input Should not be Empty..!");
+  //     return;
+  //   }
 
-    if (!categoryCode || !category) {
-      openNotification("warning", "Input Should not be Empty..!");
-      return;
-    }
+  //   try {
+  //     await axios.post("/api/saveCategory", {
+  //       id: categoryCode,
+  //       name: category,
+  //     });
+  //     openNotification("success", "Category Saved Successfully..!");
+  //     form.resetFields();
+  //     setCategories([]);
+  //   } catch (error) {
+  //     openNotification("error", "Something went wrong..!");
+  //   }
+  // };
 
-    try {
-      await axios.post("/api/updateCategory", {
-        id: categoryCode,
-        name: category,
-      });
-      openNotification("success", "Category Updated Successfully..!");
-      form.resetFields();
-      setCategories([]);
-    } catch (error) {
-      openNotification("error", "Something went wrong..!");
-    }
-  };
+  // const handleUpdate = async (values) => {
+  //   const { categoryCode, category } = values;
 
-  const handleDelete = async () => {
-    const { categoryCode } = form.getFieldsValue();
+  //   if (!categoryCode || !category) {
+  //     openNotification("warning", "Input Should not be Empty..!");
+  //     return;
+  //   }
 
-    if (!categoryCode) {
-      openNotification("warning", "Code should not be Empty..!");
-      return;
-    }
+  //   try {
+  //     await axios.post("/api/updateCategory", {
+  //       id: categoryCode,
+  //       name: category,
+  //     });
+  //     openNotification("success", "Category Updated Successfully..!");
+  //     form.resetFields();
+  //     setCategories([]);
+  //   } catch (error) {
+  //     openNotification("error", "Something went wrong..!");
+  //   }
+  // };
 
-    try {
-      await axios.post("/api/deleteCategory", { id: categoryCode });
-      openNotification("success", "Category Deleted Successfully..!");
-      form.resetFields();
-      setCategories([]);
-    } catch (error) {
-      openNotification("error", "Something went wrong..!");
-    }
-  };
+  // const handleDelete = async () => {
+  //   const { categoryCode } = form.getFieldsValue();
+
+  //   if (!categoryCode) {
+  //     openNotification("warning", "Code should not be Empty..!");
+  //     return;
+  //   }
+
+  //   try {
+  //     await axios.post("/api/deleteCategory", { id: categoryCode });
+  //     openNotification("success", "Category Deleted Successfully..!");
+  //     form.resetFields();
+  //     setCategories([]);
+  //   } catch (error) {
+  //     openNotification("error", "Something went wrong..!");
+  //   }
+  // };
 
   const handleRowClick = (record) => {
     form.setFieldsValue({

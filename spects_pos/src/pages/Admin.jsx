@@ -29,7 +29,7 @@ const Admin = () => {
   };
 
   return (
-    <div className=" bg-gray-200  p-4 w-full max-h-full ">
+    <div className="min-h-screen bg-gray-200  p-4 w-full h-full ">
       
 
       <div className="grid grid-cols-12 gap-4  w-full">
