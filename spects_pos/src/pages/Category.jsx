@@ -100,44 +100,44 @@ const Category = () => {
   //   }
   // };
 
-  // const handleUpdate = async (values) => {
-  //   const { categoryCode, category } = values;
+  const handleUpdate = async (values) => {
+    // const { categoryCode, category } = values;
 
-  //   if (!categoryCode || !category) {
-  //     openNotification("warning", "Input Should not be Empty..!");
-  //     return;
-  //   }
+    // if (!categoryCode || !category) {
+    //   openNotification("warning", "Input Should not be Empty..!");
+    //   return;
+    // }
 
-  //   try {
-  //     await axios.post("/api/updateCategory", {
-  //       id: categoryCode,
-  //       name: category,
-  //     });
-  //     openNotification("success", "Category Updated Successfully..!");
-  //     form.resetFields();
-  //     setCategories([]);
-  //   } catch (error) {
-  //     openNotification("error", "Something went wrong..!");
-  //   }
-  // };
+    // try {
+    //   await axios.post("/api/updateCategory", {
+    //     id: categoryCode,
+    //     name: category,
+    //   });
+    //   openNotification("success", "Category Updated Successfully..!");
+    //   form.resetFields();
+    //   setCategories([]);
+    // } catch (error) {
+    //   openNotification("error", "Something went wrong..!");
+    // }
+  };
 
-  // const handleDelete = async () => {
-  //   const { categoryCode } = form.getFieldsValue();
+  const handleDelete = async () => {
+    // const { categoryCode } = form.getFieldsValue();
 
-  //   if (!categoryCode) {
-  //     openNotification("warning", "Code should not be Empty..!");
-  //     return;
-  //   }
+    // if (!categoryCode) {
+    //   openNotification("warning", "Code should not be Empty..!");
+    //   return;
+    // }
 
-  //   try {
-  //     await axios.post("/api/deleteCategory", { id: categoryCode });
-  //     openNotification("success", "Category Deleted Successfully..!");
-  //     form.resetFields();
-  //     setCategories([]);
-  //   } catch (error) {
-  //     openNotification("error", "Something went wrong..!");
-  //   }
-  // };
+    // try {
+    //   await axios.post("/api/deleteCategory", { id: categoryCode });
+    //   openNotification("success", "Category Deleted Successfully..!");
+    //   form.resetFields();
+    //   setCategories([]);
+    // } catch (error) {
+    //   openNotification("error", "Something went wrong..!");
+    // }
+  };
 
   const handleRowClick = (record) => {
     form.setFieldsValue({

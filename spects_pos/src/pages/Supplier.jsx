@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, Button, Form, message } from "antd";
 import "tailwindcss/tailwind.css";
 import axios from "axios";
@@ -9,10 +9,62 @@ import {
   EditOutlined,
   ClearOutlined,
 } from "@ant-design/icons";
+import useFetch from "../hooks/useFetch";
+import useNotification from "antd/es/notification/useNotification";
 
 const Supplier = () => {
   const [form] = Form.useForm();
   const [supplierData, setSupplierData] = useState(null);
+  const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
+  const [loading, setLoading] = useState(false);
+  const { notifyError, notifySuccess } = useNotification();
+
+
+
+  const handleSave= (values) => {
+    setLoading(true);
+    const data = {
+      code: values.code,
+      name: values.name,
+      address: values.address,
+      mobile: values.teleMobile,
+      email: values.email,
+      bank: "DFCC", 
+      accNo: values.accNum,
+      openingBalance: "500000", 
+      refName: values.refName,
+      refMobile: values.refMobile,
+      userName: "Hasitha", 
+    };
+
+    console.log("data", data);
+
+    fetchAction({
+      query: `v1.0/supplier/add`,
+      body: data,
+      // method: "get",
+    });
+
+    // console.log("fetchDAta", fetchData);
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (fetchData) {
+      if (fetchData.success === true) {
+       
+
+        notifySuccess("", fetchData?.status); 
+                // message.success(fetchData?.status);
+        form.resetFields();
+
+      } else {
+        notifyError(fetchData.data);
+      }
+    }
+  }, [fetchData, fetchError]);
+
 
   const handleSearch = async (values) => {
     if (!values.word) {
@@ -34,18 +86,18 @@ const Supplier = () => {
     }
   };
 
-  const handleSave = async (values) => {
-    try {
-      const response = await axios.post("/api/supplier/save", values);
-      if (response.data.success) {
-        message.success("Saved successfully!");
-      } else {
-        message.error("Something went wrong!");
-      }
-    } catch (error) {
-      message.error("Error saving supplier!");
-    }
-  };
+  // const handleSave = async (values) => {
+  //   try {
+  //     const response = await axios.post("/api/supplier/save", values);
+  //     if (response.data.success) {
+  //       message.success("Saved successfully!");
+  //     } else {
+  //       message.error("Something went wrong!");
+  //     }
+  //   } catch (error) {
+  //     message.error("Error saving supplier!");
+  //   }
+  // };
 
   const handleUpdate = async (values) => {
     try {
@@ -76,13 +128,13 @@ const Supplier = () => {
     }
   };
 
-  const onFinish = (values) => {
-    if (supplierData) {
-      handleUpdate(values);
-    } else {
-      handleSave(values);
-    }
-  };
+  // const onFinish = (values) => {
+  //   if (supplierData) {
+  //     handleUpdate(values);
+  //   } else {
+  //     handleSave(values);
+  //   }
+  // };
 
   return (
     <div className="w-full  items-center justify-center p-4 ">
@@ -110,7 +162,7 @@ const Supplier = () => {
 
         <Form
           form={form}
-          onFinish={onFinish}
+          onFinish={handleSave}
           className="space-y-4"
           requiredMark={false}
         >
@@ -179,17 +231,17 @@ const Supplier = () => {
             </Form.Item>
           </div>
 
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end space-x-2 w-2/3 items-end">
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-blue-600 text-white"
+              className="bg-blue-600 text-white w-1/4"
             >
               Submit
             </Button>
             <Button
               onClick={() => form.resetFields()}
-              className="bg-yellow-500 text-white"
+              className="bg-yellow-500 text-white w-1/4"
             >
               Clear
             </Button>
@@ -197,14 +249,14 @@ const Supplier = () => {
               type="primary"
               danger
               onClick={handleDelete}
-              className="bg-red-500 text-white"
+              className="bg-red-500 text-white w-1/4"
             >
               Delete
             </Button>
             <Button
               type="primary"
               onClick={() => (window.location.href = "/")}
-              className="bg-black text-white"
+              className="bg-black text-white w-1/4"
             >
               Exit
             </Button>

@@ -10,7 +10,7 @@ const useFetch = () => {
 
   // const baseUrl = import.meta.env.VITE_API_URL;
   
-  const baseUrl ="https://e309c61c-e0ce-4d50-990a-07ca33ccf84c.mock.pstmn.io/"
+  const baseUrl ="http://localhost:9000/"
 
   // Simplified error handling
   const serverErrorHandle = (err) => {
@@ -28,6 +28,30 @@ const useFetch = () => {
     baseURL: baseUrl,
   });
 
+
+   // Add interceptors for debugging
+   axiosInstance.interceptors.request.use(
+    (config) => {
+      console.log("Starting Request", config);
+      return config;
+    },
+    (error) => {
+      console.error("Request Error", error);
+      return Promise.reject(error);
+    }
+  );
+
+  axiosInstance.interceptors.response.use(
+    (response) => {
+      console.log("Response:", response);
+      return response;
+    },
+    (error) => {
+      console.error("Response Error", error);
+      return Promise.reject(error);
+    }
+  );
+
   // Generic API fetch function
   const fetchAction = async ({ query, body, method = "post", params }) => {
     setFetchLoading(true);
@@ -39,7 +63,11 @@ const useFetch = () => {
         params,
         ...body,
       });
-      setFetchData(response?.data); // Set the fetched data
+      setFetchData(response?.data); 
+      // console.log("response",response?.data);
+
+      // console.log("response-dta",response?.data);
+      
       return response?.data;
     } catch (err) {
       serverErrorHandle(err);
