@@ -517,32 +517,33 @@ const BalanceBill = () => {
 
           <div className="grid grid-cols-12 gap-4 mb-4 border-2 border-gray-300 p-4">
             <Form.Item className="col-span-2">
-              <label>Sale Date:</label>
+              <label className="whitespace-nowrap">Sale Date:</label>
               <DatePicker className="w-full" />
             </Form.Item>
             <Form.Item className="col-span-2">
-              <label>Receipt No:</label>
+              <label  className="whitespace-nowrap">Receipt No:</label>
 
               <Input className="h-10" />
             </Form.Item>
             <Form.Item className="col-span-1">
-              <label>Invoice No:</label>
+              <label  className="whitespace-nowrap">Invoice No:</label>
               <Input className="h-10" />
             </Form.Item>
             <Form.Item className="col-span-2">
-              <label>Net Value:</label>
+
+              <label  className="whitespace-nowrap">Net Value:</label>
               <Input value={totalAmount - totalDiscount} className="h-10" />
             </Form.Item>
             <Form.Item className="col-span-1">
-              <label>Return:</label>
+              <label  className="whitespace-nowrap">Return:</label>
               <Input className="h-10" />
             </Form.Item>
             <Form.Item className="col-span-2">
-              <label>Paid:</label>
+              <label  className="whitespace-nowrap">Paid:</label>
               <Input value={totalPaid} className="h-10" />
             </Form.Item>
             <Form.Item className="col-span-2">
-              <label>Balance:</label>
+              <label className="whitespace-nowrap">Balance:</label>
               <Input value={balance} className="h-10" />
             </Form.Item>
           </div>
