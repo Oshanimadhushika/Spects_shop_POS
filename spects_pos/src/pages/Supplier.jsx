@@ -10,7 +10,7 @@ import {
   ClearOutlined,
 } from "@ant-design/icons";
 import useFetch from "../hooks/useFetch";
-import useNotification from "antd/es/notification/useNotification";
+import useNotification from "../hooks/useNotification";
 
 const Supplier = () => {
   const [form] = Form.useForm();
@@ -19,6 +19,7 @@ const Supplier = () => {
   const [loading, setLoading] = useState(false);
   const { notifyError, notifySuccess } = useNotification();
 
+  // console.log("success1",fetchData?.status);
 
 
   const handleSave= (values) => {
@@ -34,7 +35,7 @@ const Supplier = () => {
       openingBalance: "500000", 
       refName: values.refName,
       refMobile: values.refMobile,
-      userName: "Hasitha", 
+      userName: "oshani", 
     };
 
     console.log("data", data);
@@ -53,6 +54,7 @@ const Supplier = () => {
   useEffect(() => {
     if (fetchData) {
       if (fetchData.success === true) {
+      //  console.log("success",fetchData?.status);
        
 
         notifySuccess("", fetchData?.status); 
