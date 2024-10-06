@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Input, Button, Form, message } from "antd";
+import { Input, Button, Form, message, Modal, Table } from "antd";
 import "tailwindcss/tailwind.css";
 import axios from "axios";
 import {
@@ -16,13 +16,25 @@ const Supplier = () => {
   const [form] = Form.useForm();
   const [supplierData, setSupplierData] = useState(null);
   const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
+  const {
+    fetchData: fetchSearchData,
+    fetchAction: fetchSearch,
+    fetchError: fetchSearchError,
+  } = useFetch();
+  const {
+    fetchData: fetchUpdateData,
+    fetchAction: fetchUpdate,
+    fetchError: fetchUpdateError,
+  } = useFetch();
+
   const [loading, setLoading] = useState(false);
   const { notifyError, notifySuccess } = useNotification();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+    const [originalValues, setOriginalValues] = useState(null);
 
   // console.log("success1",fetchData?.status);
 
-
-  const handleSave= (values) => {
+  const handleSave = (values) => {
     setLoading(true);
     const data = {
       code: values.code,
@@ -30,12 +42,12 @@ const Supplier = () => {
       address: values.address,
       mobile: values.teleMobile,
       email: values.email,
-      bank: "DFCC", 
+      bank: values.bank,
       accNo: values.accNum,
-      openingBalance: "500000", 
+      // openingBalance: "500000",
       refName: values.refName,
       refMobile: values.refMobile,
-      userName: "oshani", 
+      userName: "oshani",
     };
 
     console.log("data", data);
@@ -54,65 +66,125 @@ const Supplier = () => {
   useEffect(() => {
     if (fetchData) {
       if (fetchData.success === true) {
-      //  console.log("success",fetchData?.status);
-       
+        //  console.log("success",fetchData?.status);
 
-        notifySuccess("", fetchData?.status); 
-                // message.success(fetchData?.status);
+        notifySuccess("", fetchData?.status);
+        // message.success(fetchData?.status);
         form.resetFields();
-
       } else {
         notifyError(fetchData.data);
       }
     }
   }, [fetchData, fetchError]);
 
-
   const handleSearch = async (values) => {
-    if (!values.word) {
-      message.error("Keyword should not be empty!");
-      return;
-    }
-    try {
-      const response = await axios.post("/api/supplier/search", {
-        word: values.word,
-      });
-      if (response.data === "emptyResult") {
-        message.error("No results found!");
-      } else {
-        setSupplierData(response.data);
-        form.setFieldsValue(response.data);
-      }
-    } catch (error) {
-      message.error("Error searching supplier!");
-    }
+    console.log("handle search");
+
+    // if (!values.keyword) {
+    //   message.error("Keyword should not be empty!");
+    //   return;
+    // }
+
+    const data = {
+      searchKey: values.keyword,
+    };
+
+    console.log("data", data);
+
+    fetchSearch({
+      query: `v1.0/supplier`,
+      params: data,
+      method: "get",
+    });
+
+   
   };
 
-  // const handleSave = async (values) => {
-  //   try {
-  //     const response = await axios.post("/api/supplier/save", values);
-  //     if (response.data.success) {
-  //       message.success("Saved successfully!");
-  //     } else {
-  //       message.error("Something went wrong!");
-  //     }
-  //   } catch (error) {
-  //     message.error("Error saving supplier!");
-  //   }
-  // };
+  useEffect(() => {
+    if (fetchSearchData) {
+      if (fetchSearchData.success === true) {
+        //  console.log("success",fetchData?.status);
+        setSupplierData(fetchSearchData.supplierlist);
+        setIsModalVisible(true);
+        // form.setFieldsValue(fetchSearchData.supplierlist);
+
+        console.log("suppliers", fetchSearchData.supplierlist);
+
+        // notifySuccess("", fetchSearchData?.status);
+        //         // message.success(fetchData?.status);
+        // form.resetFields();
+      } else {
+        notifyError(fetchSearchData.data);
+      }
+    }
+  }, [fetchSearchData, fetchSearchError]);
+
+
+  const handleRowClick = (record) => {
+    console.log("Record clicked:", record);
+
+    form.setFieldsValue({
+      date: record.localDateTime ? record.localDateTime.split('T')[0] : '',
+      code: record.code,
+      name: record.name,
+      address: record.address,
+      bank:record.bank,
+      teleMobile: record.mobile,
+      email: record.email,
+      accNum: record.accNo,
+      refName: record.refName,
+      refMobile: record.refMobile
+    });
+    // form.setFieldsValue(formValues);
+    // form.setFieldsValue(record); 
+    setOriginalValues(record);
+    setIsModalVisible(false); 
+  };
+
 
   const handleUpdate = async (values) => {
-    try {
-      const response = await axios.post("/api/supplier/update", values);
-      if (response.data.success) {
-        message.success("Updated successfully!");
-      } else {
-        message.error("Something went wrong!");
-      }
-    } catch (error) {
-      message.error("Error updating supplier!");
-    }
+    const data = {
+      code: values.code,
+      name: values.name,
+      address: values.address,
+      mobile: values.teleMobile,
+      email: values.email,
+      bank: values.bank,
+      accNo: values.accNum,
+      // openingBalance: "500000",
+      refName: values.refName,
+      refMobile: values.refMobile,
+      userName: "oshani",
+    };
+
+    console.log("data", data);
+
+    fetchUpdate({
+      query: `v1.0/supplier/update`,
+      body: data,
+      method: "put",
+    });
+
+    // console.log("fetchDAta", fetchData);
+
+    setLoading(false);
+
   };
+
+  useEffect(() => {
+    if (fetchUpdateData) {
+      if (fetchUpdateData.success === true) {
+        //  console.log("success",fetchData?.status);
+
+        notifySuccess("", fetchUpdateData?.status);
+        // message.success(fetchData?.status);
+        form.resetFields();
+      } else {
+        notifyError(fetchUpdateData.data);
+      }
+    }
+  }, [fetchUpdateData, fetchUpdateError]);
+
 
   const handleDelete = async (values) => {
     try {
@@ -130,13 +202,76 @@ const Supplier = () => {
     }
   };
 
-  // const onFinish = (values) => {
-  //   if (supplierData) {
-  //     handleUpdate(values);
-  //   } else {
-  //     handleSave(values);
-  //   }
-  // };
+  const columns = [
+    {
+      title: "Code",
+      dataIndex: "code",
+      key: "code",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+    {
+      title: "Mobile",
+      dataIndex: "mobile",
+      key: "mobile",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Bank",
+      dataIndex: "bank",
+      key: "bank",
+    },
+    {
+      title: "Account No.",
+      dataIndex: "accNo",
+      key: "accNo",
+    },
+    // {
+    //   title: "Opening Balance",
+    //   dataIndex: "openingBalance",
+    //   key: "openingBalance",
+    //   render: (value) => `$${value.toLocaleString()}`,
+    // },
+    {
+      title: "Ref Name",
+      dataIndex: "refName",
+      key: "refName",
+    },
+    {
+      title: "Ref Mobile",
+      dataIndex: "refMobile",
+      key: "refMobile",
+    },
+  ];
+
+  const handleSubmit = () => {
+    form
+      .validateFields() // Validate the fields
+      .then((values) => {
+        if (originalValues) {
+          // If original values exist, call the update function
+          handleUpdate(values);
+        } else {
+          // If no original values, call the save function
+          handleSave(values);
+        }
+      })
+      .catch((errorInfo) => {
+        console.log('Validation Failed:', errorInfo);
+      });
+  };
 
   return (
     <div className="w-full  items-center justify-center p-4 ">
@@ -145,7 +280,7 @@ const Supplier = () => {
           <h1 className="text-md font-semibold">
             Supplier <span className="text-red-500">Master</span>
           </h1>
-          <Form form={form} layout="inline" onFinish={handleSearch}>
+          <Form  layout="inline" onFinish={handleSearch}>
             <Form.Item name="keyword">
               <Input
                 placeholder="Search..."
@@ -157,6 +292,7 @@ const Supplier = () => {
                 type="primary"
                 htmlType="submit"
                 icon={<SearchOutlined />}
+                // onClick={handleSearch}
               />
             </Form.Item>
           </Form>
@@ -164,7 +300,7 @@ const Supplier = () => {
 
         <Form
           form={form}
-          onFinish={handleSave}
+          // onFinish={handleSave}
           className="space-y-4"
           requiredMark={false}
         >
@@ -208,13 +344,25 @@ const Supplier = () => {
             </Form.Item>
           </div>
 
+          {/* ============================== */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Form.Item
+            label="Bank "
+            name="bank"
+            rules={[{ required: true }]}
+          >
+            <Input className="" />
+          </Form.Item>
+            <Form.Item
             label="Bank Account No"
             name="accNum"
             rules={[{ required: true }]}
           >
-            <Input className="w-1/3" />
+            <Input className="" />
           </Form.Item>
+          </div>
+
+        
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Form.Item
@@ -238,9 +386,20 @@ const Supplier = () => {
               type="primary"
               htmlType="submit"
               className="bg-blue-600 text-white w-1/4"
+              onClick={handleSubmit}
+
             >
-              Submit
+              {/* Submit */}
+              {originalValues ? 'Update' : 'Submit'}
             </Button>
+            {/* <Button
+              type="primary"
+              htmlType="submit"
+              className="bg-green-600 text-white w-1/4"
+              onClick={handleUpdateClick}
+            >
+              Update
+            </Button> */}
             <Button
               onClick={() => form.resetFields()}
               className="bg-yellow-500 text-white w-1/4"
@@ -264,6 +423,25 @@ const Supplier = () => {
             </Button>
           </div>
         </Form>
+
+         <Modal
+          title="Select Supplier"
+          visible={isModalVisible}
+          onCancel={() => setIsModalVisible(false)}
+          footer={null} 
+          width={800} 
+        >
+          <Table
+            columns={columns}
+            dataSource={supplierData}
+            rowKey="supplierId"
+            onRow={(record) => ({
+              onClick: () => handleRowClick(record), 
+            })}
+            pagination={false} 
+            scroll={{ x: 1200 }}
+          />
+        </Modal>
       </div>
     </div>
   );
