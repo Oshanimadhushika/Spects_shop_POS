@@ -31,6 +31,8 @@ const Supplier = () => {
   const { notifyError, notifySuccess } = useNotification();
   const [isModalVisible, setIsModalVisible] = useState(false);
     const [originalValues, setOriginalValues] = useState(null);
+    const [supplierId, setSupplierId] = useState(null);
+
 
   // console.log("success1",fetchData?.status);
 
@@ -137,6 +139,7 @@ const Supplier = () => {
     });
     // form.setFieldsValue(formValues);
     // form.setFieldsValue(record); 
+    setSupplierId(record.supplierId)
     setOriginalValues(record);
     setIsModalVisible(false); 
   };
@@ -144,6 +147,7 @@ const Supplier = () => {
 
   const handleUpdate = async (values) => {
     const data = {
+      supplierId:supplierId,
       code: values.code,
       name: values.name,
       address: values.address,
