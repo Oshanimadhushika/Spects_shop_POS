@@ -476,7 +476,7 @@ const BalanceBill = () => {
         {/* Header Title */}
         <div className="col-span-10 flex items-center">
           <h1 className="text-3xl font-bold p-2 my-2">
-            Balance <span className="text-purple-500">Bill</span>
+            Balance <span className="text-purple-500">Payment</span>
           </h1>
         </div>
 
@@ -534,10 +534,10 @@ const BalanceBill = () => {
               <label  className="whitespace-nowrap">Net Value:</label>
               <Input value={totalAmount - totalDiscount} className="h-10" />
             </Form.Item>
-            <Form.Item className="col-span-1">
+            {/* <Form.Item className="col-span-1">
               <label  className="whitespace-nowrap">Return:</label>
               <Input className="h-10" />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item className="col-span-2">
               <label  className="whitespace-nowrap">Paid:</label>
               <Input value={totalPaid} className="h-10" />

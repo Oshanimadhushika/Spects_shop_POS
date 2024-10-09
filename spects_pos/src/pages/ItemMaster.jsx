@@ -282,7 +282,7 @@ const ItemMaster = () => {
             </Col>
           </Row>
 
-          <Row gutter={16}>
+          {/* <Row gutter={16}>
             <Col span={8}>
               <Form.Item
                 label="Maximum Stock Quantity"
@@ -311,7 +311,7 @@ const ItemMaster = () => {
                 <Input placeholder="Enter  minimum stock quantity " className="w-1/2"/>
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
 
           <Form.Item>
             <Button type="primary" htmlType="submit" className="mr-2 bg-purple-500 hover:bg-blue-500 text-white font-semibold p-3 rounded-md">

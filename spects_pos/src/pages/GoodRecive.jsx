@@ -106,7 +106,7 @@ const PurchasingInvoice = () => {
           {/* Header Title */}
           <div className="col-span-10 flex items-center">
             <h1 className="text-3xl font-bold p-2 my-2">
-              Purchasing <span className="text-purple-500">Invoice</span>
+              Good <span className="text-purple-500">Recieve</span> Notes
             </h1>
           </div>
 

@@ -13,14 +13,57 @@ const RegisterUser = () => {
   const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
   const [loading, setLoading] = useState(false);
   const { notifyError, notifySuccess } = useNotification();
+  const {
+    fetchData: fetchBranchData,
+    fetchAction: fetchBranchAction,
+    fetchError: fetchBranchError,
+  } = useFetch();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
+  // useEffect(() => {
+  //   getBranches();
+  // }, []);
 
-
-  const AddUser= (values) => {
+  const getBranches = (values) => {
     setLoading(true);
     const data = {
-      code: values.branchCode,
-      branchName: values.branchName,
+      searchKey: "no",
+    };
+
+    console.log("data", data);
+
+    fetchBranchAction({
+      query: `v1.0/branch`,
+      params: data,
+      method: "get",
+    });
+
+    // console.log("fetchDAta", fetchData);
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (fetchBranchData) {
+      if (fetchBranchData.success === true) {
+        console.log("branch", fetchBranchData?.branchList.branchName);
+        setBranches(fetchBranchData?.branchList.branchName);
+
+        notifySuccess("", fetchBranchData?.status);
+        // message.success(fetchData?.status);
+      } else {
+        notifyError(fetchBranchData.data);
+      }
+    }
+  }, [fetchBranchData, fetchBranchError]);
+
+  const AddUser = (values) => {
+    setLoading(true);
+    const data = {
+      userName: values.userName,
+      branch: values.branch,
+      password: values.password,
+
     };
 
     console.log("data", data);
@@ -39,17 +82,28 @@ const RegisterUser = () => {
   useEffect(() => {
     if (fetchData) {
       if (fetchData.success === true) {
-       
-
-        notifySuccess("", fetchData?.status); 
-                // message.success(fetchData?.status);
+        notifySuccess("", fetchData?.status);
+        // message.success(fetchData?.status);
         form.resetFields();
-
       } else {
         notifyError(fetchData.data);
       }
     }
   }, [fetchData, fetchError]);
+
+  const onValuesChange = (changedValues, allValues) => {
+    const { userName, branch, password, repeatPassword } = allValues;
+
+    // Check if all fields are filled and passwords match
+    const isFormValid =
+      userName &&
+      branch &&
+      password &&
+      repeatPassword &&
+      password === repeatPassword;
+
+    setIsButtonDisabled(!isFormValid);
+  };
 
   return (
     // <div className=" flex items-center justify-center w-full  p-3 bg-white rounded-xl">
@@ -66,6 +120,7 @@ const RegisterUser = () => {
             layout="vertical"
             onFinish={AddUser}
             requiredMark={false}
+            onValuesChange={onValuesChange}
           >
             <Form.Item
               label="User Name"
@@ -89,6 +144,24 @@ const RegisterUser = () => {
                   </Option>
                 ))}
               </Select>
+
+              {/* <Select placeholder="Select Town">
+                <Option key="1" value="colombo">
+                  Colombo
+                </Option>
+                <Option key="2" value="kandy">
+                  Kandy
+                </Option>
+                <Option key="3" value="galle">
+                  Galle
+                </Option>
+                <Option key="4" value="jaffna">
+                  Jaffna
+                </Option>
+                <Option key="5" value="anuradhapura">
+                  Anuradhapura
+                </Option>
+              </Select> */}
             </Form.Item>
 
             <Form.Item
@@ -117,6 +190,7 @@ const RegisterUser = () => {
                 htmlType="submit"
                 className="w-full bg-purple-500 hover:bg-blue-500 text-white font-semibold p-3 rounded-md"
                 loading={loading}
+                disabled={isButtonDisabled}
               >
                 Register
               </Button>

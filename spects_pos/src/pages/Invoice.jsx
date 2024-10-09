@@ -138,23 +138,23 @@ const Invoice = () => {
         <div className="grid grid-cols-12 gap-4 mb-4">
           <div className="col-span-6">
             <Form.Item label="Quantity">
-              <Input className="w-full" />
+              <Input className="w-2/3" />
             </Form.Item>
 
             <Form.Item label="Price">
-              <Input className="w-full" />
+              <Input className="w-2/3" />
             </Form.Item>
 
             <Form.Item label="Discount">
-              <Input className="w-full" />
+              <Input className="w-2/3" />
             </Form.Item>
 
             <Form.Item label="Discount Amount">
-              <Input className="w-full" />
+              <Input className="w-2/3" />
             </Form.Item>
 
             <Form.Item label="Amount">
-              <Input className="w-full" />
+              <Input className="w-2/3" />
             </Form.Item>
 
             {/* <Button type="primary" onClick={handleAddItem}>

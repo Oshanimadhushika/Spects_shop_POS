@@ -27,6 +27,9 @@ const ClaimBill = () => {
   const [idNo, setIdNo] = useState('');
   const [contactNo, setContactNo] = useState('');
   const [address, setAddress] = useState('');
+  const [codeOne, setcodeOne] = useState("");
+  const [codeTwo, setcodeTwo] = useState("");
+  const [codeThree, setcodeThree] = useState("");
 
   useEffect(() => {
     const one = JSON.parse(sessionStorage.getItem("itemOne"));
@@ -159,24 +162,8 @@ const ClaimBill = () => {
                 </div>
           {/* 2nd Row */}
           <div className="grid grid-cols-12 gap-4 mt-5">
-            <div className="col-span-3">
-              <label className="form-label text-xs font-medium text-center mt-2">
-                Description:
-              </label>
-              <Input
-                value={descriptionOne}
-                onChange={(e) => setDescriptionOne(e.target.value)}
-              />
-              <Input
-                value={descriptionTwo}
-                onChange={(e) => setDescriptionTwo(e.target.value)}
-              />
-              <Input
-                value={descriptionThree}
-                onChange={(e) => setDescriptionThree(e.target.value)}
-              />
-            </div>
-            <div className="col-span-3">
+
+          <div className="col-span-3">
               <label className="form-label text-xs font-medium text-center mt-2">
                 Search Item:
               </label>
@@ -191,7 +178,7 @@ const ClaimBill = () => {
                   className="text-yellow-500 text-xl ml-4 hover:text-blue-700"
                 />
               </div>
-              <div className="flex items-center">
+              {/* <div className="flex items-center">
                 <Input
                   className="rounded-full shadow-xl"
                   onChange={(e) => setDescriptionTwo(e.target.value)}
@@ -212,9 +199,46 @@ const ClaimBill = () => {
                   icon={<SearchOutlined />}
                   className="text-yellow-500 text-xl ml-4 hover:text-blue-700"
                 />
-              </div>
+              </div> */}
             </div>
+
+            <div className="col-span-2">
+              <label className="form-label text-xs font-medium text-center mt-2">
+                Item Code:
+              </label>
+              <Input
+                value={codeOne}
+                onChange={(e) => setDescriptionOne(e.target.value)}
+              />
+              {/* <Input
+                value={codeTwo}
+                onChange={(e) => setDescriptionTwo(e.target.value)}
+              />
+              <Input
+                value={codeThree}
+                onChange={(e) => setDescriptionThree(e.target.value)}
+              /> */}
+            </div>
+
             <div className="col-span-3">
+              <label className="form-label text-xs font-medium text-center mt-2">
+                Description:
+              </label>
+              <Input
+                value={descriptionOne}
+                onChange={(e) => setDescriptionOne(e.target.value)}
+              />
+              {/* <Input
+                value={descriptionTwo}
+                onChange={(e) => setDescriptionTwo(e.target.value)}
+              />
+              <Input
+                value={descriptionThree}
+                onChange={(e) => setDescriptionThree(e.target.value)}
+              /> */}
+            </div>
+          
+            <div className="col-span-2">
               <label className="form-label text-xs font-medium text-center mt-2">
                 Qty:
               </label>
@@ -222,16 +246,16 @@ const ClaimBill = () => {
                 value={qtyOne}
                 onChange={(e) => setQtyOne(e.target.value)}
               />
-              <Input
+              {/* <Input
                 value={qtyTwo}
                 onChange={(e) => setQtyTwo(e.target.value)}
               />
               <Input
                 value={qtyThree}
                 onChange={(e) => setQtyThree(e.target.value)}
-              />
+              /> */}
             </div>
-            <div className="col-span-3">
+            <div className="col-span-2">
               <label className="form-label text-xs font-medium text-center mt-2">
                 Amount:
               </label>
@@ -239,14 +263,14 @@ const ClaimBill = () => {
                 value={amountOne}
                 onChange={(e) => setAmountOne(e.target.value)}
               />
-              <Input
+              {/* <Input
                 value={amountTwo}
                 onChange={(e) => setAmountTwo(e.target.value)}
               />
               <Input
                 value={amountThree}
                 onChange={(e) => setAmountThree(e.target.value)}
-              />
+              /> */}
             </div>
           </div>
 

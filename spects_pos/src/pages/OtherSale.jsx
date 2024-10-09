@@ -321,13 +321,13 @@ const OtherSales = () => {
                 disabled
               />
             </Form.Item>
-            <Form.Item label="Payment Type" name="paymentType">
+            {/* <Form.Item label="Payment Type" name="paymentType">
               <Select placeholder="Select Payment Type">
                 <Option value="Cash">Cash</Option>
                 <Option value="Card">Card</Option>
                 <Option value="Online Transfer">Online Transfer</Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
           </div>
         </Form>
 
@@ -360,12 +360,27 @@ const OtherSales = () => {
             <Form layout="vertical" form={itemForm} onFinish={handleAddItem}>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 <Form.Item label="Code">
-                  <Input
+                  {/* <Input
                     value={selectedItem?.code || ""}
-                    disabled
+                    // disabled
                     placeholder="Select Item"
-                  />
+                  /> */}
+                   <div className="flex space-x-2">
+                <Input
+                  placeholder="Search Code"
+                  value={itemSearchKeyword}
+                  onChange={(e) => setItemSearchKeyword(e.target.value)}
+                  className="rounded-full"
+                />
+                <Button
+                  type="primary"
+                  icon={<SearchOutlined />}
+                  onClick={handleItemSearch}
+                />
+              </div>
                 </Form.Item>
+
+
                 <Form.Item label="Description">
                   <Input
                     value={selectedItem?.description || ""}
@@ -390,7 +405,7 @@ const OtherSales = () => {
                 <Form.Item label="Price">
                   <Input
                     value={`Rs. ${selectedItem?.price || 0}`}
-                    disabled
+                    // disabled
                     placeholder="Select Item"
                   />
                 </Form.Item>
@@ -418,10 +433,10 @@ const OtherSales = () => {
                           itemForm.getFieldValue("discount")
                         : 0
                     }`}
-                    disabled
+                    // disabled
                   />
                 </Form.Item>
-                <Form.Item>
+                {/* <Form.Item>
                   <Button
                     type="primary"
                     htmlType="submit"
@@ -431,7 +446,7 @@ const OtherSales = () => {
                   >
                     Add Item
                   </Button>
-                </Form.Item>
+                </Form.Item> */}
               </div>
             </Form>
 
@@ -450,18 +465,9 @@ const OtherSales = () => {
 
         {/* Payment Section */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-4">
-          {/* Payment Input */}
-          <div className="col-span-1 border-2 border-gray-300 p-4">
+          {/* <div className="col-span-1 border-2 border-gray-300 p-4">
             <Form layout="vertical" form={paymentForm} onFinish={handlePayment}>
-              <Form.Item
-                label="Payment Amount"
-                name="paymentAmount"
-                rules={[
-                  { required: true, message: "Please enter payment amount" },
-                ]}
-              >
-                <Input type="number" min={0} />
-              </Form.Item>
+              
               <Form.Item
                 label="Payment Type"
                 name="paymentType"
@@ -475,14 +481,24 @@ const OtherSales = () => {
                   <Option value="Online Transfer">Online Transfer</Option>
                 </Select>
               </Form.Item>
+
+              <Form.Item
+                label="Payment Amount"
+                name="paymentAmount"
+                rules={[
+                  { required: true, message: "Please enter payment amount" },
+                ]}
+              >
+                <Input type="number" min={0} />
+              </Form.Item>
               <Button type="primary" htmlType="submit">
                 Save Payment
               </Button>
             </Form>
-          </div>
+          </div> */}
 
           {/* Payment Data Table */}
-          <div className="col-span-1 lg:col-span-3 border-2 border-gray-300 p-4">
+          <div className="col-span-1 lg:col-span-7 border-2 border-gray-300 p-4">
             <Table
               dataSource={paymentData}
               columns={paymentDataColumns}
