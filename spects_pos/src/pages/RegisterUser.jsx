@@ -20,21 +20,21 @@ const RegisterUser = () => {
   } = useFetch();
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
-  // useEffect(() => {
-  //   getBranches();
-  // }, []);
+  useEffect(() => {
+    getBranches();
+  }, []);
 
   const getBranches = (values) => {
     setLoading(true);
-    const data = {
-      searchKey: "no",
-    };
+    // const data = {
+    //   searchKey: "no",
+    // };
 
-    console.log("data", data);
+    // console.log("data", data);
 
     fetchBranchAction({
       query: `v1.0/branch`,
-      params: data,
+      // params: data,
       method: "get",
     });
 
@@ -46,10 +46,10 @@ const RegisterUser = () => {
   useEffect(() => {
     if (fetchBranchData) {
       if (fetchBranchData.success === true) {
-        console.log("branch", fetchBranchData?.branchList.branchName);
-        setBranches(fetchBranchData?.branchList.branchName);
+        console.log("branch", fetchBranchData?.branchList);
+        setBranches(fetchBranchData?.branchList);
 
-        notifySuccess("", fetchBranchData?.status);
+        // notifySuccess("", fetchBranchData?.status);
         // message.success(fetchData?.status);
       } else {
         notifyError(fetchBranchData.data);
@@ -63,13 +63,12 @@ const RegisterUser = () => {
       userName: values.userName,
       branch: values.branch,
       password: values.password,
-
     };
 
     console.log("data", data);
 
     fetchAction({
-      query: `v1.0/user`,
+      query: `v1.0/user/sign-up`,
       body: data,
       // method: "get",
     });
@@ -137,31 +136,21 @@ const RegisterUser = () => {
               name="branch"
               rules={[{ required: true, message: "Please select a branch" }]}
             >
-              <Select placeholder="Select Branch">
+              {/* <Select placeholder="Select Branch">
                 {branches.map((branch) => (
                   <Option key={branch.id} value={branch.id}>
                     {branch.name}
                   </Option>
                 ))}
-              </Select>
-
-              {/* <Select placeholder="Select Town">
-                <Option key="1" value="colombo">
-                  Colombo
-                </Option>
-                <Option key="2" value="kandy">
-                  Kandy
-                </Option>
-                <Option key="3" value="galle">
-                  Galle
-                </Option>
-                <Option key="4" value="jaffna">
-                  Jaffna
-                </Option>
-                <Option key="5" value="anuradhapura">
-                  Anuradhapura
-                </Option>
               </Select> */}
+
+              <Select placeholder="Select Branch">
+                {(Array.isArray(branches) ? branches : []).map((branch) => (
+                  <Option key={branch.id} value={branch.id}>
+                    {branch.branchName}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
 
             <Form.Item
