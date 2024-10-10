@@ -82,16 +82,11 @@ const Supplier = () => {
   const handleSearch = async (values) => {
     console.log("handle search");
 
-    // if (!values.keyword) {
-    //   message.error("Keyword should not be empty!");
-    //   return;
-    // }
-
     const data = {
       searchKey: values.keyword,
     };
 
-    console.log("data", data);
+    // console.log("data", data);
 
     fetchSearch({
       query: `v1.0/supplier`,
@@ -105,16 +100,12 @@ const Supplier = () => {
   useEffect(() => {
     if (fetchSearchData) {
       if (fetchSearchData.success === true) {
-        //  console.log("success",fetchData?.status);
         setSupplierData(fetchSearchData.supplierlist);
         setIsModalVisible(true);
         // form.setFieldsValue(fetchSearchData.supplierlist);
 
-        console.log("suppliers", fetchSearchData.supplierlist);
+        // console.log("suppliers", fetchSearchData.supplierlist);
 
-        // notifySuccess("", fetchSearchData?.status);
-        //         // message.success(fetchData?.status);
-        // form.resetFields();
       } else {
         notifyError(fetchSearchData.data);
       }

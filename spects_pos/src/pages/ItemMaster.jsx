@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Select, Table, message, Row, Col } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Table,
+  message,
+  Row,
+  Col,
+  Modal,
+} from "antd";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
+import useNotification from "../hooks/useNotification";
+import useFetch from "../hooks/useFetch";
 
 const { Option } = Select;
 
@@ -14,6 +26,25 @@ const ItemMaster = () => {
   const [lastItemCode, setLastItemCode] = useState("");
   const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
+
+  const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
+  const {
+    fetchData: fetchSearchData,
+    fetchAction: fetchSearch,
+    fetchError: fetchSearchError,
+  } = useFetch();
+  const {
+    fetchData: fetchUpdateData,
+    fetchAction: fetchUpdate,
+    fetchError: fetchUpdateError,
+  } = useFetch();
+
+  const [loading, setLoading] = useState(false);
+  const { notifyError, notifySuccess } = useNotification();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [itemData, setItemData] = useState(null);
+  
+
 
   useEffect(() => {
     // Fetch data for departments, categories, suppliers, and last item code
@@ -38,13 +69,33 @@ const ItemMaster = () => {
   }, []);
 
   const handleSearch = async (values) => {
-    // try {
-    //   const res = await axios.post('/api/searchItems', { keyword: values.keyword });
-    //   setItems(res.data);
-    // } catch (error) {
-    //   message.error('Search failed');
-    // }
+    const data = {
+      searchKey: values.keyword,
+    };
+
+    // console.log("data", data);
+
+    fetchSearch({
+      query: `v1.0/item`,
+      params: data,
+      method: "get",
+    });
   };
+
+  useEffect(() => {
+    if (fetchSearchData) {
+      if (fetchSearchData.success === true) {
+        setItemData(fetchSearchData.itemList);
+        setIsModalVisible(true);
+        // form.setFieldsValue(fetchSearchData.supplierlist);
+
+        // console.log("suppliers", fetchSearchData.supplierlist);
+
+      } else {
+        notifyError(fetchSearchData.data);
+      }
+    }
+  }, [fetchSearchData, fetchSearchError]);
 
   const handleSubmit = async (values) => {
     //     try {
@@ -90,8 +141,8 @@ const ItemMaster = () => {
     { title: "Discount Rs", dataIndex: "discountRs", key: "discountRs" },
     { title: "Wholesale", dataIndex: "wholesale", key: "wholesale" },
     { title: "Location", dataIndex: "location", key: "location" },
-    { title: "MaxStockQty", dataIndex: "maxStockQty", key: "maxStockQty" },
-    { title: "MinStockQty", dataIndex: "minStockQty", key: "minStockQty" },
+    // { title: "MaxStockQty", dataIndex: "maxStockQty", key: "maxStockQty" },
+    // { title: "MinStockQty", dataIndex: "minStockQty", key: "minStockQty" },
   ];
 
   const onRowClick = (record) => {
@@ -143,7 +194,10 @@ const ItemMaster = () => {
                 name="itemCode"
                 rules={[{ required: true, message: "Please input item code!" }]}
               >
-                <Input defaultValue={lastItemCode} placeholder="Enter Item Code"/>
+                <Input
+                  defaultValue={lastItemCode}
+                  placeholder="Enter Item Code"
+                />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -152,7 +206,7 @@ const ItemMaster = () => {
                 name="barcode"
                 rules={[{ required: true, message: "Please input barcode!" }]}
               >
-                <Input placeholder="Enter Barcode"/>
+                <Input placeholder="Enter Barcode" />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -163,7 +217,7 @@ const ItemMaster = () => {
                   { required: true, message: "Please input description!" },
                 ]}
               >
-                <Input placeholder="Enter Description"/>
+                <Input placeholder="Enter Description" />
               </Form.Item>
             </Col>
           </Row>
@@ -225,7 +279,11 @@ const ItemMaster = () => {
                 name="cost"
                 rules={[{ required: true, message: "Please input cost!" }]}
               >
-                <Input type="number" placeholder="Enter  Cost " className="w-1/2"/>
+                <Input
+                  type="number"
+                  placeholder="Enter  Cost "
+                  className="w-1/2"
+                />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -234,7 +292,11 @@ const ItemMaster = () => {
                 name="profit"
                 rules={[{ required: true, message: "Please input profit!" }]}
               >
-                <Input type="number" placeholder="Enter  Profit " className="w-1/2"/>
+                <Input
+                  type="number"
+                  placeholder="Enter  Profit "
+                  className="w-1/2"
+                />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -245,7 +307,7 @@ const ItemMaster = () => {
                   { required: true, message: "Please input sales price!" },
                 ]}
               >
-                <Input placeholder="Enter  Sales Price " className="w-1/2"/>
+                <Input placeholder="Enter  Sales Price " className="w-1/2" />
               </Form.Item>
             </Col>
           </Row>
@@ -259,7 +321,7 @@ const ItemMaster = () => {
                   { required: true, message: "Please input discount amount!" },
                 ]}
               >
-                <Input placeholder="Enter  Discount " className="w-1/2"/>
+                <Input placeholder="Enter  Discount " className="w-1/2" />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -277,7 +339,7 @@ const ItemMaster = () => {
                 name="location"
                 rules={[{ required: true, message: "Please input location!" }]}
               >
-                <Input placeholder="Enter  Location " className="w-1/2"/>
+                <Input placeholder="Enter  Location " className="w-1/2" />
               </Form.Item>
             </Col>
           </Row>
@@ -314,7 +376,11 @@ const ItemMaster = () => {
           </Row> */}
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" className="mr-2 bg-purple-500 hover:bg-blue-500 text-white font-semibold p-3 rounded-md">
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="mr-2 bg-purple-500 hover:bg-blue-500 text-white font-semibold p-3 rounded-md"
+            >
               Submit
             </Button>
             <Button
@@ -324,22 +390,45 @@ const ItemMaster = () => {
             >
               Clear
             </Button>
-            <Button type="danger" onClick={handleDelete} className="mr-2 border-2 border-red-500 text-red-500">
+            <Button
+              type="danger"
+              onClick={handleDelete}
+              className="mr-2 border-2 border-red-500 text-red-500"
+            >
               Delete
             </Button>
           </Form.Item>
         </Form>
 
         <Table
-        className="whitespace-nowrap text-xs"
+          className="whitespace-nowrap text-xs"
           columns={columns}
           dataSource={items}
           rowKey="code"
           onRow={(record) => ({
             onClick: () => onRowClick(record),
           })}
-          scroll={{ x: 'max-content',y: '100%' }}
+          scroll={{ x: "max-content", y: "100%" }}
         />
+
+        <Modal
+          title="Select Supplier"
+          visible={isModalVisible}
+          onCancel={() => setIsModalVisible(false)}
+          footer={null}
+          width={800}
+        >
+          <Table
+            columns={columns}
+            dataSource={itemData}
+            rowKey="supplierId"
+            onRow={(record) => ({
+              onClick: () => onRowClick(record),
+            })}
+            pagination={false}
+            scroll={{ x: 1200 }}
+          />
+        </Modal>
       </div>
     </div>
   );
