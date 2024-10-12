@@ -9,8 +9,9 @@ import {
   Space,
   Typography,
 } from "antd";
-import "antd/dist/reset.css"; // Import Ant Design styles
-import "tailwindcss/tailwind.css"; // Import Tailwind CSS styles
+// import "antd/dist/reset.css"; 
+// import "tailwindcss/tailwind.css";
+import { useNavigate } from "react-router-dom";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -20,6 +21,7 @@ const Prescription = () => {
   const [jobNo, setJobNo] = useState("");
   const [assessment, setAssessment] = useState({});
   const [prescription, setPrescription] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Simulate fetching data
@@ -407,7 +409,11 @@ const Prescription = () => {
         </div>
 
         <Space size="middle">
-          <Button type="primary" htmlType="submit" className="w-32">
+          <Button type="primary" htmlType="submit" className="w-32"
+         onClick={() => {
+          navigate("/custom-register");
+        }}
+          >
             Patient Register
           </Button>
           <Button type="primary" htmlType="submit" className="w-32">

@@ -43,8 +43,6 @@ const ItemMaster = () => {
   const { notifyError, notifySuccess } = useNotification();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [itemData, setItemData] = useState(null);
-  
-
 
   useEffect(() => {
     // Fetch data for departments, categories, suppliers, and last item code
@@ -86,11 +84,10 @@ const ItemMaster = () => {
     if (fetchSearchData) {
       if (fetchSearchData.success === true) {
         setItemData(fetchSearchData.itemList);
-        setIsModalVisible(true);
+        // setIsModalVisible(true);
         // form.setFieldsValue(fetchSearchData.supplierlist);
 
         // console.log("suppliers", fetchSearchData.supplierlist);
-
       } else {
         notifyError(fetchSearchData.data);
       }
@@ -98,19 +95,29 @@ const ItemMaster = () => {
   }, [fetchSearchData, fetchSearchError]);
 
   const handleSubmit = async (values) => {
-    //     try {
-    //       if (selectedItem) {
-    //         await axios.post('/api/updateItem', values);
-    //         message.success('Item updated successfully');
-    //       } else {
-    //         await axios.post('/api/saveItem', values);
-    //         message.success('Item added successfully');
-    //       }
-    //       form.resetFields();
-    //       setSelectedItem(null);
-    //     } catch (error) {
-    //       message.error('Operation failed');
-    //     }
+    const data = {
+      itemCode: values.itemCode,
+      barcode: values.barcode,
+      description: values.description,
+      category: values.category,
+      departmentId: values.department,
+      supplierId: values.supplier, 
+      cost: values.cost,
+      profit: values.profit,
+      salePrice: values.salesPrice,
+      discount: values.discountRs,
+      wholesalePrice: values.wholesale,
+      location: values.location,
+    };
+
+    // console.log("data", data);
+
+    fetchAction({
+      query: `v1.0/item/add`,
+      body: data,
+      // method: "get",
+    });
+
   };
 
   const handleDelete = async () => {
@@ -233,7 +240,7 @@ const ItemMaster = () => {
               >
                 <Select placeholder="Select department">
                   {departments.map((dept) => (
-                    <Option key={dept.id} value={dept.name}>
+                    <Option key={dept.id} value={dept.id}>
                       {dept.name}
                     </Option>
                   ))}
@@ -401,17 +408,17 @@ const ItemMaster = () => {
         </Form>
 
         <Table
-          className="whitespace-nowrap text-xs"
+          className="whitespace-nowrap text-xs "
           columns={columns}
-          dataSource={items}
+          dataSource={itemData}
           rowKey="code"
           onRow={(record) => ({
             onClick: () => onRowClick(record),
           })}
-          scroll={{ x: "max-content", y: "100%" }}
+          scroll={{ x: true, y: "100%" }}
         />
 
-        <Modal
+        {/* <Modal
           title="Select Supplier"
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)}
@@ -428,7 +435,7 @@ const ItemMaster = () => {
             pagination={false}
             scroll={{ x: 1200 }}
           />
-        </Modal>
+        </Modal> */}
       </div>
     </div>
   );

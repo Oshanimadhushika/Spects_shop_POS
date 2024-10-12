@@ -62,6 +62,8 @@ const RegisterUser = () => {
     const data = {
       userName: values.userName,
       branch: values.branch,
+      userRole: values.role,
+      mobileNo: "",
       password: values.password,
     };
 
@@ -91,18 +93,25 @@ const RegisterUser = () => {
   }, [fetchData, fetchError]);
 
   const onValuesChange = (changedValues, allValues) => {
-    const { userName, branch, password, repeatPassword } = allValues;
+    const { userName, branch, role, password, repeatPassword } = allValues;
 
     // Check if all fields are filled and passwords match
     const isFormValid =
       userName &&
       branch &&
+      role &&
       password &&
       repeatPassword &&
       password === repeatPassword;
 
     setIsButtonDisabled(!isFormValid);
   };
+
+  const roles = [
+    { label: "Super Admin", value: "Super Admin" },
+    { label: "Admin", value: "Admin" },
+    { label: "User", value: "User" },
+  ];
 
   return (
     // <div className=" flex items-center justify-center w-full  p-3 bg-white rounded-xl">
@@ -136,18 +145,24 @@ const RegisterUser = () => {
               name="branch"
               rules={[{ required: true, message: "Please select a branch" }]}
             >
-              {/* <Select placeholder="Select Branch">
-                {branches.map((branch) => (
-                  <Option key={branch.id} value={branch.id}>
-                    {branch.name}
-                  </Option>
-                ))}
-              </Select> */}
-
               <Select placeholder="Select Branch">
                 {(Array.isArray(branches) ? branches : []).map((branch) => (
                   <Option key={branch.id} value={branch.id}>
                     {branch.branchName}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              label="Select Role"
+              name="role"
+              rules={[{ required: true, message: "Please select a role" }]}
+            >
+              <Select placeholder="Select Role">
+                {(Array.isArray(roles) ? roles : []).map((role) => (
+                  <Option key={role.value} value={role.value}>
+                    {role.label}
                   </Option>
                 ))}
               </Select>
@@ -163,11 +178,33 @@ const RegisterUser = () => {
               <Input.Password placeholder="Password" />
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               label="Repeat Password"
               name="repeatPassword"
               rules={[
                 { required: true, message: "Please repeat your password" },
+              ]}
+            >
+              <Input.Password placeholder="Repeat Password" />
+            </Form.Item> */}
+
+            <Form.Item
+              label="Repeat Password"
+              name="repeatPassword"
+              dependencies={["password"]}
+              hasFeedback
+              rules={[
+                { required: true, message: "Please repeat your password" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("The  passwords that you entered do not match!")
+                    );
+                  },
+                }),
               ]}
             >
               <Input.Password placeholder="Repeat Password" />
