@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Table, message, Radio } from "antd";
 import "tailwindcss/tailwind.css"; // Ensure Tailwind CSS is imported
-import { SearchOutlined, SaveOutlined, DeleteOutlined, EditOutlined, ClearOutlined } from '@ant-design/icons';
-
+import {
+  SearchOutlined,
+  SaveOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  ClearOutlined,
+} from "@ant-design/icons";
+import useNotification from "../hooks/useNotification";
+import useFetch from "../hooks/useFetch";
 
 const Department = () => {
   const [form] = Form.useForm();
@@ -14,16 +21,19 @@ const Department = () => {
   const [nextId, setNextId] = useState(1);
   const [loading, setLoading] = useState(false);
 
-
   const { notifyError, notifySuccess } = useNotification();
+  const {
+    fetchData: fetchSearchData,
+    fetchAction: fetchSearch,
+    fetchError: fetchSearchError,
+  } = useFetch();
 
   useEffect(() => {
-    nextID();
-  }, [])
+    fetchnextID();
+  }, []);
 
-  const nextID = (values) => {
+  const fetchnextID = (values) => {
     setLoading(true);
-    
 
     fetchIdAction({
       query: `v1.0/department/next-id`,
@@ -36,12 +46,12 @@ const Department = () => {
 
   useEffect(() => {
     if (fetchId) {
-      if (fetchId.success === true) {
+      if (fetchId.status === true) {
         // navigate("/workspace/subscription-plans");
-        setNextId(fetchId);
-        console.log(fetchId);
-
-        notifySuccess("Next Id!");
+        setNextId(fetchId.message);
+        form.setFieldsValue({ departmentCode: fetchId.message });
+        console.log(fetchId.message);
+        // notifySuccess("Next Id!");
       } else {
         notifyError(fetchData.message);
       }
@@ -51,16 +61,16 @@ const Department = () => {
   const handleSave = (values) => {
     setLoading(true);
     const data = {
-      departmentCode: nextId,
-      departmentName: values.department,
+      id: nextId,
+      name: values.department,
     };
 
     console.log("data", data);
 
     fetchAction({
       query: `v1.0/department/add`,
-      params: data,
-      method: "get",
+      body: data,
+      // method: "get",
     });
 
     setLoading(false);
@@ -71,9 +81,8 @@ const Department = () => {
       if (fetchData.success === true) {
         // navigate("/workspace/subscription-plans");
         notifySuccess("Department Saved Successfully!");
-        setDepartments([]);
-
         form.resetFields();
+        fetchnextID();
       } else {
         notifyError(fetchData.message);
       }
@@ -81,57 +90,33 @@ const Department = () => {
   }, [fetchData, fetchError]);
 
   const handleSearch = async (values) => {
-    // const { keyword } = values;
-    // if (!keyword) {
-    //   message.warning("Keyword should not be Empty..!");
-    //   return;
-    // }
-    // // Replace with actual API call
-    // // const result = await searchDepartment(keyword);
-    // // Mock result
-    // const result = [{ id: "001", name: "Department A" }]; // Mocked data
-    // if (result.length === 0) {
-    //   message.warning("No results found..!");
-    // } else {
-    //   setDepartments(result);
-    // }
+    console.log("handle search");
+
+    const data = {
+      searchKey: values.keyword,
+    };
+
+    // console.log("data", data);
+
+    fetchSearch({
+      query: `v1.0/department`,
+      params: data,
+      method: "get",
+    });
   };
 
-  // const handleSubmit = async (action) => {
-  //   try {
-  //     const values = await form.validateFields();
-  //     if (!values.departmentCode || !values.department) {
-  //       message.warning("Code or Department Name should not be Empty..!");
-  //       return;
-  //     }
-  //     // Handle form submission based on the action
-  //     // Example API calls
-  //     // switch (action) {
-  //     //   case 'save':
-  //     //     await saveDepartment(values.departmentCode, values.department);
-  //     //     message.success("Department Saved Successfully..!");
-  //     //     break;
-  //     //   case 'update':
-  //     //     await updateDepartment(values.departmentCode, values.department);
-  //     //     message.success("Department Updated Successfully..!");
-  //     //     break;
-  //     //   case 'delete':
-  //     //     await deleteDepartment(values.departmentCode);
-  //     //     message.success("Department Deleted Successfully..!");
-  //     //     break;
-  //     //   default:
-  //     //     break;
-  //     // }
-  //     message.success(
-  //       `${
-  //         action.charAt(0).toUpperCase() + action.slice(1)
-  //       } Department Successfully..!`
-  //     );
-  //   } catch (error) {
-  //     console.error("Error submitting form:", error);
-  //   }
-  // };
+  useEffect(() => {
+    if (fetchSearchData) {
+      if (fetchSearchData.success === true) {
+        setDepartments(fetchSearchData.list);
+        // form.setFieldsValue(fetchSearchData.supplierlist);
 
+        // console.log("suppliers", fetchSearchData.supplierlist);
+      } else {
+        notifyError(fetchSearchData.data);
+      }
+    }
+  }, [fetchSearchData, fetchSearchError]);
   const handleClear = () => {
     form.resetFields();
     setSelectedDepartment(null);
@@ -153,13 +138,20 @@ const Department = () => {
             Department <span className="text-red-500">Master</span>
           </h1>
           <Form form={form} layout="inline" onFinish={handleSearch}>
-          <Form.Item name="keyword">
-            <Input placeholder="Search..." className="rounded-full shadow-xl" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" icon={<SearchOutlined />} />
-          </Form.Item>
-        </Form>
+            <Form.Item name="keyword">
+              <Input
+                placeholder="Search..."
+                className="rounded-full shadow-xl"
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                icon={<SearchOutlined />}
+              />
+            </Form.Item>
+          </Form>
         </div>
 
         <Form
@@ -173,7 +165,7 @@ const Department = () => {
             label="Code"
             rules={[{ required: true, message: "Code is required" }]}
           >
-            <Input className="w-1/4" />
+            <Input className="w-1/4" readOnly value={nextId} />
           </Form.Item>
           <Form.Item
             name="department"
@@ -191,17 +183,17 @@ const Department = () => {
             </Button>
             <Button
               type="primary"
-              onClick={() =>
-                handleSave()
+              onClick={
+                () => handleSave()
                 //  handleSubmit("update")
-                }
+              }
               disabled={!selectedDepartment}
             >
               Update
             </Button>
             <Button
               type="danger"
-              onClick={() => handleSubmit("delete")}
+              // onClick={() => handleSubmit("delete")}
               disabled={!selectedDepartment}
             >
               Delete

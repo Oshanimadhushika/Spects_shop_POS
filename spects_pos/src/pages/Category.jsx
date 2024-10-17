@@ -20,18 +20,22 @@ const Category = () => {
 
   const [loading, setLoading] = useState(false);
 
-
   const { notifyError, notifySuccess } = useNotification();
 
   const { fetchData: fetchId, fetchAction: fetchIdAction } = useFetch();
 
   const [nextId, setNextId] = useState(1);
+  const {
+    fetchData: fetchSearchData,
+    fetchAction: fetchSearch,
+    fetchError: fetchSearchError,
+  } = useFetch();
 
   useEffect(() => {
-    nextID();
-  }, [])
+    fetchnextID();
+  }, []);
 
-  const nextID = (values) => {
+  const fetchnextID = (values) => {
     setLoading(true);
     // const data = {
     //   code: values.categoryCode,
@@ -51,14 +55,16 @@ const Category = () => {
 
   useEffect(() => {
     if (fetchId) {
-      if (fetchId.success === true) {
+      if (fetchId.status === true) {
         // navigate("/workspace/subscription-plans");
-        setNextId(fetchId);
+        setNextId(fetchId.message);
+        form.setFieldsValue({ categoryCode: fetchId.message });
+
         console.log(fetchId);
 
-        notifySuccess("Next Id!");
+        // notifySuccess("Next Id!");
       } else {
-        notifyError(fetchData.message);
+        notifyError("Cannot find the ID..!");
       }
     }
   }, [fetchId]);
@@ -66,16 +72,16 @@ const Category = () => {
   const handleSave = (values) => {
     setLoading(true);
     const data = {
-      code: nextId,
-      categoryName: values.category,
+      id: nextId,
+      name: values.category,
     };
 
     console.log("data", data);
 
     fetchAction({
       query: `v1.0/category/add`,
-      params: data,
-      method: "get",
+      body: data,
+      // method: "get",
     });
 
     setLoading(false);
@@ -83,12 +89,21 @@ const Category = () => {
 
   useEffect(() => {
     if (fetchData) {
-      if (fetchData.success === true) {
+      if (fetchData.status === true) {
         // navigate("/workspace/subscription-plans");
-        notifySuccess("Category Saved Successfully!");
-        setCategories([]);
+        notifySuccess(fetchData.message);
+
+        // const newCategory = {
+        //   id: nextId, // Code corresponds to nextId
+        //   name: form.getFieldValue("category"), // Get category name from the form
+        // };
+
+        // setCategories((prevCategories) => [...prevCategories, newCategory]);
+
+        // setCategories([]);
 
         form.resetFields();
+        fetchnextID();
       } else {
         notifyError(fetchData.message);
       }
@@ -96,44 +111,32 @@ const Category = () => {
   }, [fetchData, fetchError]);
 
   const handleSearch = async (values) => {
-    // const { keyword } = values;
-    // if (!keyword) {
-    //   openNotification("warning", "Keyword should not be Empty..!");
-    //   return;
-    // }
-    // try {
-    //   const response = await axios.post("/api/searchCategory", { keyword });
-    //   const { data } = response;
-    //   if (data.length === 0) {
-    //     openNotification("warning", "No results found..!");
-    //   } else {
-    //     setCategories(data);
-    //   }
-    // } catch (error) {
-    //   openNotification("error", "Something went wrong..!");
-    // }
+    console.log("handle search");
+
+    const data = {
+      searchKey: values.keyword,
+    };
+
+    // console.log("data", data);
+
+    fetchSearch({
+      query: `v1.0/category`,
+      params: data,
+      method: "get",
+    });
   };
 
-  // const handleSave = async (values) => {
-  //   const { categoryCode, category } = values;
+  useEffect(() => {
+    if (fetchSearchData) {
+      if (fetchSearchData.success === true) {
+        setCategories(fetchSearchData.list);
+       
+      } else {
+        notifyError(fetchSearchData.data);
+      }
+    }
+  }, [fetchSearchData, fetchSearchError]);
 
-  //   if (!categoryCode || !category) {
-  //     openNotification("warning", "Input Should not be Empty..!");
-  //     return;
-  //   }
-
-  //   try {
-  //     await axios.post("/api/saveCategory", {
-  //       id: categoryCode,
-  //       name: category,
-  //     });
-  //     openNotification("success", "Category Saved Successfully..!");
-  //     form.resetFields();
-  //     setCategories([]);
-  //   } catch (error) {
-  //     openNotification("error", "Something went wrong..!");
-  //   }
-  // };
 
   const handleUpdate = async (values) => {
     // const { categoryCode, category } = values;
