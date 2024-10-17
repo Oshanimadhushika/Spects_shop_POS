@@ -61,7 +61,7 @@ const RegisterUser = () => {
     setLoading(true);
     const data = {
       userName: values.userName,
-      branch: values.branch,
+      branchId: values.branch,
       userRole: values.role,
       mobileNo: "",
       password: values.password,
@@ -178,15 +178,7 @@ const RegisterUser = () => {
               <Input.Password placeholder="Password" />
             </Form.Item>
 
-            {/* <Form.Item
-              label="Repeat Password"
-              name="repeatPassword"
-              rules={[
-                { required: true, message: "Please repeat your password" },
-              ]}
-            >
-              <Input.Password placeholder="Repeat Password" />
-            </Form.Item> */}
+           
 
             <Form.Item
               label="Repeat Password"

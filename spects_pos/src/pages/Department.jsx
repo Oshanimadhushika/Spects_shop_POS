@@ -8,58 +8,129 @@ const Department = () => {
   const [form] = Form.useForm();
   const [departments, setDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const { fetchData: fetchId, fetchAction: fetchIdAction } = useFetch();
+  const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
+
+  const [nextId, setNextId] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+
+  const { notifyError, notifySuccess } = useNotification();
+
+  useEffect(() => {
+    nextID();
+  }, [])
+
+  const nextID = (values) => {
+    setLoading(true);
+    
+
+    fetchIdAction({
+      query: `v1.0/department/next-id`,
+      // params: data,
+      method: "get",
+    });
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (fetchId) {
+      if (fetchId.success === true) {
+        // navigate("/workspace/subscription-plans");
+        setNextId(fetchId);
+        console.log(fetchId);
+
+        notifySuccess("Next Id!");
+      } else {
+        notifyError(fetchData.message);
+      }
+    }
+  }, [fetchId]);
+
+  const handleSave = (values) => {
+    setLoading(true);
+    const data = {
+      departmentCode: nextId,
+      departmentName: values.department,
+    };
+
+    console.log("data", data);
+
+    fetchAction({
+      query: `v1.0/department/add`,
+      params: data,
+      method: "get",
+    });
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (fetchData) {
+      if (fetchData.success === true) {
+        // navigate("/workspace/subscription-plans");
+        notifySuccess("Department Saved Successfully!");
+        setDepartments([]);
+
+        form.resetFields();
+      } else {
+        notifyError(fetchData.message);
+      }
+    }
+  }, [fetchData, fetchError]);
 
   const handleSearch = async (values) => {
-    const { keyword } = values;
-    if (!keyword) {
-      message.warning("Keyword should not be Empty..!");
-      return;
-    }
-    // Replace with actual API call
-    // const result = await searchDepartment(keyword);
-    // Mock result
-    const result = [{ id: "001", name: "Department A" }]; // Mocked data
-    if (result.length === 0) {
-      message.warning("No results found..!");
-    } else {
-      setDepartments(result);
-    }
+    // const { keyword } = values;
+    // if (!keyword) {
+    //   message.warning("Keyword should not be Empty..!");
+    //   return;
+    // }
+    // // Replace with actual API call
+    // // const result = await searchDepartment(keyword);
+    // // Mock result
+    // const result = [{ id: "001", name: "Department A" }]; // Mocked data
+    // if (result.length === 0) {
+    //   message.warning("No results found..!");
+    // } else {
+    //   setDepartments(result);
+    // }
   };
 
-  const handleSubmit = async (action) => {
-    try {
-      const values = await form.validateFields();
-      if (!values.departmentCode || !values.department) {
-        message.warning("Code or Department Name should not be Empty..!");
-        return;
-      }
-      // Handle form submission based on the action
-      // Example API calls
-      // switch (action) {
-      //   case 'save':
-      //     await saveDepartment(values.departmentCode, values.department);
-      //     message.success("Department Saved Successfully..!");
-      //     break;
-      //   case 'update':
-      //     await updateDepartment(values.departmentCode, values.department);
-      //     message.success("Department Updated Successfully..!");
-      //     break;
-      //   case 'delete':
-      //     await deleteDepartment(values.departmentCode);
-      //     message.success("Department Deleted Successfully..!");
-      //     break;
-      //   default:
-      //     break;
-      // }
-      message.success(
-        `${
-          action.charAt(0).toUpperCase() + action.slice(1)
-        } Department Successfully..!`
-      );
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
-  };
+  // const handleSubmit = async (action) => {
+  //   try {
+  //     const values = await form.validateFields();
+  //     if (!values.departmentCode || !values.department) {
+  //       message.warning("Code or Department Name should not be Empty..!");
+  //       return;
+  //     }
+  //     // Handle form submission based on the action
+  //     // Example API calls
+  //     // switch (action) {
+  //     //   case 'save':
+  //     //     await saveDepartment(values.departmentCode, values.department);
+  //     //     message.success("Department Saved Successfully..!");
+  //     //     break;
+  //     //   case 'update':
+  //     //     await updateDepartment(values.departmentCode, values.department);
+  //     //     message.success("Department Updated Successfully..!");
+  //     //     break;
+  //     //   case 'delete':
+  //     //     await deleteDepartment(values.departmentCode);
+  //     //     message.success("Department Deleted Successfully..!");
+  //     //     break;
+  //     //   default:
+  //     //     break;
+  //     // }
+  //     message.success(
+  //       `${
+  //         action.charAt(0).toUpperCase() + action.slice(1)
+  //       } Department Successfully..!`
+  //     );
+  //   } catch (error) {
+  //     console.error("Error submitting form:", error);
+  //   }
+  // };
 
   const handleClear = () => {
     form.resetFields();
@@ -112,7 +183,7 @@ const Department = () => {
             <Input className="w-1/4" />
           </Form.Item>
           <div className="flex justify-end gap-2 mt-4">
-            <Button type="primary" onClick={() => handleSubmit("save")}>
+            <Button type="primary" onClick={() => handleSave()}>
               Save
             </Button>
             <Button type="default" onClick={handleClear}>
@@ -120,7 +191,10 @@ const Department = () => {
             </Button>
             <Button
               type="primary"
-              onClick={() => handleSubmit("update")}
+              onClick={() =>
+                handleSave()
+                //  handleSubmit("update")
+                }
               disabled={!selectedDepartment}
             >
               Update
@@ -132,12 +206,12 @@ const Department = () => {
             >
               Delete
             </Button>
-            <Button
+            {/* <Button
               type="link"
               onClick={() => (window.location.href = "index.php")}
             >
               Exit
-            </Button>
+            </Button> */}
           </div>
         </Form>
 

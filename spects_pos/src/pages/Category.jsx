@@ -17,18 +17,60 @@ const Category = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
+
   const [loading, setLoading] = useState(false);
+
+
   const { notifyError, notifySuccess } = useNotification();
+
+  const { fetchData: fetchId, fetchAction: fetchIdAction } = useFetch();
+
+  const [nextId, setNextId] = useState(1);
+
+  useEffect(() => {
+    nextID();
+  }, [])
+
+  const nextID = (values) => {
+    setLoading(true);
+    // const data = {
+    //   code: values.categoryCode,
+    //   categoryName: values.category,
+    // };
+
+    // console.log("data",data);
+
+    fetchIdAction({
+      query: `v1.0/category/next-id`,
+      // params: data,
+      method: "get",
+    });
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (fetchId) {
+      if (fetchId.success === true) {
+        // navigate("/workspace/subscription-plans");
+        setNextId(fetchId);
+        console.log(fetchId);
+
+        notifySuccess("Next Id!");
+      } else {
+        notifyError(fetchData.message);
+      }
+    }
+  }, [fetchId]);
 
   const handleSave = (values) => {
     setLoading(true);
     const data = {
-      code: values.categoryCode,
+      code: nextId,
       categoryName: values.category,
     };
 
-    console.log("data",data);
-    
+    console.log("data", data);
 
     fetchAction({
       query: `v1.0/category/add`,
@@ -43,41 +85,34 @@ const Category = () => {
     if (fetchData) {
       if (fetchData.success === true) {
         // navigate("/workspace/subscription-plans");
-        notifySuccess("Branch Saved Successfully!");
+        notifySuccess("Category Saved Successfully!");
+        setCategories([]);
+
+        form.resetFields();
       } else {
         notifyError(fetchData.message);
       }
     }
   }, [fetchData, fetchError]);
 
-  const openNotification = (type, message) => {
-    notification[type]({
-      message: message,
-    });
-  };
-
   const handleSearch = async (values) => {
-    const { keyword } = values;
-
-    if (!keyword) {
-      openNotification("warning", "Keyword should not be Empty..!");
-      return;
-    }
-
-    try {
-      const response = await axios.post("/api/searchCategory", { keyword });
-      const { data } = response;
-      if (data.length === 0) {
-        openNotification("warning", "No results found..!");
-      } else {
-        setCategories(data);
-      }
-    } catch (error) {
-      openNotification("error", "Something went wrong..!");
-    }
+    // const { keyword } = values;
+    // if (!keyword) {
+    //   openNotification("warning", "Keyword should not be Empty..!");
+    //   return;
+    // }
+    // try {
+    //   const response = await axios.post("/api/searchCategory", { keyword });
+    //   const { data } = response;
+    //   if (data.length === 0) {
+    //     openNotification("warning", "No results found..!");
+    //   } else {
+    //     setCategories(data);
+    //   }
+    // } catch (error) {
+    //   openNotification("error", "Something went wrong..!");
+    // }
   };
-
-
 
   // const handleSave = async (values) => {
   //   const { categoryCode, category } = values;
@@ -102,12 +137,10 @@ const Category = () => {
 
   const handleUpdate = async (values) => {
     // const { categoryCode, category } = values;
-
     // if (!categoryCode || !category) {
     //   openNotification("warning", "Input Should not be Empty..!");
     //   return;
     // }
-
     // try {
     //   await axios.post("/api/updateCategory", {
     //     id: categoryCode,
@@ -123,12 +156,10 @@ const Category = () => {
 
   const handleDelete = async () => {
     // const { categoryCode } = form.getFieldsValue();
-
     // if (!categoryCode) {
     //   openNotification("warning", "Code should not be Empty..!");
     //   return;
     // }
-
     // try {
     //   await axios.post("/api/deleteCategory", { id: categoryCode });
     //   openNotification("success", "Category Deleted Successfully..!");
@@ -192,7 +223,7 @@ const Category = () => {
               name="categoryCode"
               rules={[{ required: true, message: "Please input the Code!" }]}
             >
-              <Input className="w-1/4" />
+              <Input className="w-1/4" readOnly value={nextId} />
             </Form.Item>
             <Form.Item
               label="Category:"
