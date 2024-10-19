@@ -13,6 +13,8 @@ import useNotification from "../hooks/useNotification";
 
 const Category = () => {
   const [form] = Form.useForm();
+  const [form1] = Form.useForm();
+
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -31,10 +33,18 @@ const Category = () => {
     fetchError: fetchSearchError,
   } = useFetch();
 
+  const {
+    fetchData: fetchUpdateData,
+    fetchAction: fetchUpdate,
+    fetchError: fetchUpdateError,
+  } = useFetch();
+
   useEffect(() => {
     fetchnextID();
+    handleSearch({ keyword: "" });
   }, []);
 
+  // get nextId
   const fetchnextID = (values) => {
     setLoading(true);
     // const data = {
@@ -56,19 +66,15 @@ const Category = () => {
   useEffect(() => {
     if (fetchId) {
       if (fetchId.status === true) {
-        // navigate("/workspace/subscription-plans");
         setNextId(fetchId.message);
         form.setFieldsValue({ categoryCode: fetchId.message });
-
-        console.log(fetchId);
-
-        // notifySuccess("Next Id!");
       } else {
         notifyError("Cannot find the ID..!");
       }
     }
   }, [fetchId]);
 
+  // Add category
   const handleSave = (values) => {
     setLoading(true);
     const data = {
@@ -76,7 +82,6 @@ const Category = () => {
       name: values.category,
     };
 
-    console.log("data", data);
 
     fetchAction({
       query: `v1.0/category/add`,
@@ -90,18 +95,8 @@ const Category = () => {
   useEffect(() => {
     if (fetchData) {
       if (fetchData.status === true) {
-        // navigate("/workspace/subscription-plans");
         notifySuccess(fetchData.message);
-
-        // const newCategory = {
-        //   id: nextId, // Code corresponds to nextId
-        //   name: form.getFieldValue("category"), // Get category name from the form
-        // };
-
-        // setCategories((prevCategories) => [...prevCategories, newCategory]);
-
-        // setCategories([]);
-
+        handleSearch({ keyword: "" });
         form.resetFields();
         fetchnextID();
       } else {
@@ -110,53 +105,72 @@ const Category = () => {
     }
   }, [fetchData, fetchError]);
 
+  // search
   const handleSearch = async (values) => {
-    console.log("handle search");
+
+    const searchKey = values.keyword ? values.keyword : ""; 
 
     const data = {
-      searchKey: values.keyword,
+      searchKey,
     };
-
-    // console.log("data", data);
 
     fetchSearch({
       query: `v1.0/category`,
       params: data,
       method: "get",
     });
+
+    if (!searchKey) {
+      form.resetFields(); 
+     
+    }
   };
 
   useEffect(() => {
     if (fetchSearchData) {
-      if (fetchSearchData.success === true) {
+
+      if (fetchSearchData?.success === true) {
+
         setCategories(fetchSearchData.list);
-       
       } else {
-        notifyError(fetchSearchData.data);
+        notifyError("Error Fetching Data..!");
       }
     }
   }, [fetchSearchData, fetchSearchError]);
 
+  // update data
 
   const handleUpdate = async (values) => {
-    // const { categoryCode, category } = values;
-    // if (!categoryCode || !category) {
-    //   openNotification("warning", "Input Should not be Empty..!");
-    //   return;
-    // }
-    // try {
-    //   await axios.post("/api/updateCategory", {
-    //     id: categoryCode,
-    //     name: category,
-    //   });
-    //   openNotification("success", "Category Updated Successfully..!");
-    //   form.resetFields();
-    //   setCategories([]);
-    // } catch (error) {
-    //   openNotification("error", "Something went wrong..!");
-    // }
+    setLoading(true);
+    const data = {
+      id: values.categoryCode,
+      name: values.category,
+    };
+
+
+    fetchUpdate({
+      query: `v1.0/category/update`,
+      body: data,
+      method: "put",
+    });
+
+    setLoading(false);
   };
 
+  useEffect(() => {
+    if (fetchUpdateData) {
+      if (fetchUpdateData.status === true) {
+        notifySuccess(fetchUpdateData.message);
+        handleSearch({ keyword: "" });
+        form.resetFields();
+        fetchnextID();
+      } else {
+        notifyError(fetchUpdateData.message);
+      }
+    }
+  }, [fetchUpdateData, fetchError]);
+
+  // delete data
   const handleDelete = async () => {
     // const { categoryCode } = form.getFieldsValue();
     // if (!categoryCode) {
@@ -173,6 +187,7 @@ const Category = () => {
     // }
   };
 
+  // rowclick and set form data
   const handleRowClick = (record) => {
     form.setFieldsValue({
       categoryCode: record.id,
@@ -181,6 +196,11 @@ const Category = () => {
     setSelectedCategory(record);
   };
 
+  const handleInputChange = (e) => {
+    const keyword = e.target.value;
+
+    handleSearch({ keyword });
+  };
   return (
     <div className="w-full  items-center justify-center p-4 ">
       <div className=" w-full bg-gray-200 justify-center rounded-xl shadow-xl p-4">
@@ -188,20 +208,22 @@ const Category = () => {
           <h1 className="text-md font-semibold">
             Category <span className="text-red-500">Master</span>
           </h1>
-          <Form form={form} layout="inline" onFinish={handleSearch}>
+          <Form layout="inline" onFinish={handleSearch}>
             <Form.Item name="keyword">
               <Input
+                prefix={<SearchOutlined />}
                 placeholder="Search..."
                 className="rounded-full shadow-xl"
+                onChange={handleInputChange}
               />
             </Form.Item>
-            <Form.Item>
+            {/* <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
                 icon={<SearchOutlined />}
               />
-            </Form.Item>
+            </Form.Item> */}
           </Form>
         </div>
 
@@ -249,7 +271,10 @@ const Category = () => {
               {selectedCategory ? "Update" : "Submit"}
             </Button>
             <Button
-              onClick={() => form.resetFields()}
+              onClick={() => {
+                form.resetFields();
+                fetchnextID();
+              }}
               icon={<ClearOutlined />}
               className="bg-yellow-500"
             >

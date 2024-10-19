@@ -32,7 +32,7 @@ const useFetch = () => {
    // Add interceptors for debugging
    axiosInstance.interceptors.request.use(
     (config) => {
-      console.log("Starting Request", config);
+      // console.log("Starting Request", config);
       return config;
     },
     (error) => {
@@ -43,7 +43,7 @@ const useFetch = () => {
 
   axiosInstance.interceptors.response.use(
     (response) => {
-      console.log("Response:", response);
+      // console.log("Response:", response);
       return response;
     },
     (error) => {

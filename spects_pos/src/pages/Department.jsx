@@ -78,7 +78,7 @@ const Department = () => {
 
   useEffect(() => {
     if (fetchData) {
-      if (fetchData.success === true) {
+      if (fetchData.status === true) {
         // navigate("/workspace/subscription-plans");
         notifySuccess("Department Saved Successfully!");
         form.resetFields();
@@ -95,9 +95,7 @@ const Department = () => {
     const data = {
       searchKey: values.keyword,
     };
-
     // console.log("data", data);
-
     fetchSearch({
       query: `v1.0/department`,
       params: data,
@@ -117,6 +115,42 @@ const Department = () => {
       }
     }
   }, [fetchSearchData, fetchSearchError]);
+
+  const handleUpdate = async (values) => {
+    // const { categoryCode, category } = values;
+    // if (!categoryCode || !category) {
+    //   openNotification("warning", "Input Should not be Empty..!");
+    //   return;
+    // }
+    // try {
+    //   await axios.post("/api/updateCategory", {
+    //     id: categoryCode,
+    //     name: category,
+    //   });
+    //   openNotification("success", "Category Updated Successfully..!");
+    //   form.resetFields();
+    //   setCategories([]);
+    // } catch (error) {
+    //   openNotification("error", "Something went wrong..!");
+    // }
+  };
+
+  const handleDelete = async () => {
+    // const { categoryCode } = form.getFieldsValue();
+    // if (!categoryCode) {
+    //   openNotification("warning", "Code should not be Empty..!");
+    //   return;
+    // }
+    // try {
+    //   await axios.post("/api/deleteCategory", { id: categoryCode });
+    //   openNotification("success", "Category Deleted Successfully..!");
+    //   form.resetFields();
+    //   setCategories([]);
+    // } catch (error) {
+    //   openNotification("error", "Something went wrong..!");
+    // }
+  };
+
   const handleClear = () => {
     form.resetFields();
     setSelectedDepartment(null);
@@ -159,6 +193,7 @@ const Department = () => {
           layout="vertical"
           className="mt-4"
           requiredMark={false}
+          onFinish={selectedDepartment ? handleUpdate : handleSave}
         >
           <Form.Item
             name="departmentCode"
@@ -175,13 +210,22 @@ const Department = () => {
             <Input className="w-1/4" />
           </Form.Item>
           <div className="flex justify-end gap-2 mt-4">
-            <Button type="primary" onClick={() => handleSave()}>
-              Save
-            </Button>
-            <Button type="default" onClick={handleClear}>
-              Clear
+            <Button
+              type="primary"
+              htmlType="submit"
+              icon={<SaveOutlined />}
+              className="bg-blue-600"
+            >
+              {selectedDepartment ? "Update" : "Submit"}
             </Button>
             <Button
+              onClick={() => form.resetFields()}
+              icon={<ClearOutlined />}
+              className="bg-yellow-500"
+            >
+              Clear
+            </Button>
+            {/* <Button
               type="primary"
               onClick={
                 () => handleSave()
@@ -190,11 +234,12 @@ const Department = () => {
               disabled={!selectedDepartment}
             >
               Update
-            </Button>
-            <Button
-              type="danger"
-              // onClick={() => handleSubmit("delete")}
-              disabled={!selectedDepartment}
+            </Button> */}
+               <Button
+              danger
+              onClick={handleDelete}
+              icon={<DeleteOutlined />}
+              className="bg-red-500"
             >
               Delete
             </Button>

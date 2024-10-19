@@ -46,7 +46,7 @@ const Supplier = () => {
       email: values.email,
       bank: values.bank,
       accNo: values.accNum,
-      // openingBalance: "500000",
+      openingBalance: "500000",
       refName: values.refName,
       refMobile: values.refMobile,
       userName: "oshani",
@@ -83,7 +83,7 @@ const Supplier = () => {
     console.log("handle search");
 
     const data = {
-      searchKey: values.keyword,
+      searchKey: values.keyword?values.keyword:" ",
     };
 
     // console.log("data", data);
@@ -128,8 +128,7 @@ const Supplier = () => {
       refName: record.refName,
       refMobile: record.refMobile
     });
-    // form.setFieldsValue(formValues);
-    // form.setFieldsValue(record); 
+  
     setSupplierId(record.supplierId)
     setOriginalValues(record);
     setIsModalVisible(false); 
