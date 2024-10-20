@@ -18,6 +18,7 @@ import JobStatus from './pages/JobStatus';
 import StockAdjust from './pages/StockAdjust';
 import Expenses from './pages/Expenses';
 import ClaimBill from './pages/ClaimBill';
+import TransferStock from './pages/TransferStock';
 
 function App() {
   return (
@@ -42,10 +43,12 @@ function App() {
       <Route path="/stock-adjust" element={<StockAdjust />} />
       <Route path="/expenses" element={<Expenses />} />
       <Route path="/claim-bil" element={<ClaimBill />} />
+      <Route path="/transfer" element={<TransferStock />} />
 
 
 
 
+      
 
 
 

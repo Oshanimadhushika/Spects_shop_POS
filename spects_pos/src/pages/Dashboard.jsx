@@ -153,6 +153,15 @@ const Dashboard = () => {
       title: "Setting",
       url: "/settings",
     },
+
+    {
+      color: "bg-[#F8BBD0]",
+      icon: (
+        <img src={Sale} alt="Bar Code" className="w-full h-full" />
+      ),
+      title: "Transfer Stock",
+      url: "/transfer",
+    },
     {
       color: "bg-[#A5D6A7]",
       icon: <img src={Report} alt="Reports" className="w-full h-full" />,
@@ -167,6 +176,8 @@ const Dashboard = () => {
       title: "Bar Code",
       url: "/bar-code",
     },
+
+
     {
       color: "bg-[#C8E6C9]",
       icon: (

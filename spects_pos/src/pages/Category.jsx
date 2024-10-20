@@ -13,7 +13,6 @@ import useNotification from "../hooks/useNotification";
 
 const Category = () => {
   const [form] = Form.useForm();
-  const [form1] = Form.useForm();
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -207,6 +206,7 @@ const Category = () => {
           <Form layout="inline" onFinish={handleSearch}>
             <Form.Item name="keyword">
               <Input
+                prefix={<SearchOutlined />}
                 placeholder="Search..."
                 className="rounded-full shadow-xl"
                 onChange={handleInputChange}
