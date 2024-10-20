@@ -82,7 +82,6 @@ const Category = () => {
       name: values.category,
     };
 
-
     fetchAction({
       query: `v1.0/category/add`,
       body: data,
@@ -98,6 +97,7 @@ const Category = () => {
         notifySuccess(fetchData.message);
         handleSearch({ keyword: "" });
         form.resetFields();
+        setSelectedCategory(null);
         fetchnextID();
       } else {
         notifyError(fetchData.message);
@@ -107,8 +107,7 @@ const Category = () => {
 
   // search
   const handleSearch = async (values) => {
-
-    const searchKey = values.keyword ? values.keyword : ""; 
+    const searchKey = values.keyword ? values.keyword : "";
 
     const data = {
       searchKey,
@@ -121,16 +120,13 @@ const Category = () => {
     });
 
     if (!searchKey) {
-      form.resetFields(); 
-     
+      form.resetFields();
     }
   };
 
   useEffect(() => {
     if (fetchSearchData) {
-
       if (fetchSearchData?.success === true) {
-
         setCategories(fetchSearchData.list);
       } else {
         notifyError("Error Fetching Data..!");
@@ -147,7 +143,6 @@ const Category = () => {
       name: values.category,
     };
 
-
     fetchUpdate({
       query: `v1.0/category/update`,
       body: data,
@@ -163,6 +158,7 @@ const Category = () => {
         notifySuccess(fetchUpdateData.message);
         handleSearch({ keyword: "" });
         form.resetFields();
+        setSelectedCategory(null);
         fetchnextID();
       } else {
         notifyError(fetchUpdateData.message);
@@ -211,7 +207,6 @@ const Category = () => {
           <Form layout="inline" onFinish={handleSearch}>
             <Form.Item name="keyword">
               <Input
-                prefix={<SearchOutlined />}
                 placeholder="Search..."
                 className="rounded-full shadow-xl"
                 onChange={handleInputChange}
@@ -274,6 +269,7 @@ const Category = () => {
               onClick={() => {
                 form.resetFields();
                 fetchnextID();
+                setSelectedCategory(null);
               }}
               icon={<ClearOutlined />}
               className="bg-yellow-500"

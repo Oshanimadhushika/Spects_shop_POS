@@ -27,9 +27,16 @@ const Department = () => {
     fetchAction: fetchSearch,
     fetchError: fetchSearchError,
   } = useFetch();
+  const {
+    fetchData: fetchUpdateData,
+    fetchAction: fetchUpdate,
+    fetchError: fetchUpdateError,
+  } = useFetch();
 
+  // fetch Next id
   useEffect(() => {
     fetchnextID();
+    handleSearch({ keyword: "" });
   }, []);
 
   const fetchnextID = (values) => {
@@ -47,11 +54,8 @@ const Department = () => {
   useEffect(() => {
     if (fetchId) {
       if (fetchId.status === true) {
-        // navigate("/workspace/subscription-plans");
         setNextId(fetchId.message);
         form.setFieldsValue({ departmentCode: fetchId.message });
-        console.log(fetchId.message);
-        // notifySuccess("Next Id!");
       } else {
         notifyError(fetchData.message);
       }
@@ -65,8 +69,6 @@ const Department = () => {
       name: values.department,
     };
 
-    console.log("data", data);
-
     fetchAction({
       query: `v1.0/department/add`,
       body: data,
@@ -79,9 +81,10 @@ const Department = () => {
   useEffect(() => {
     if (fetchData) {
       if (fetchData.status === true) {
-        // navigate("/workspace/subscription-plans");
         notifySuccess("Department Saved Successfully!");
+        handleSearch({ keyword: "" });
         form.resetFields();
+        setSelectedDepartment(null);
         fetchnextID();
       } else {
         notifyError(fetchData.message);
@@ -90,10 +93,10 @@ const Department = () => {
   }, [fetchData, fetchError]);
 
   const handleSearch = async (values) => {
-    console.log("handle search");
+    const searchKey = values.keyword ? values.keyword : "";
 
     const data = {
-      searchKey: values.keyword,
+      searchKey,
     };
     // console.log("data", data);
     fetchSearch({
@@ -101,6 +104,10 @@ const Department = () => {
       params: data,
       method: "get",
     });
+
+    if (!searchKey) {
+      form.resetFields();
+    }
   };
 
   useEffect(() => {
@@ -117,23 +124,35 @@ const Department = () => {
   }, [fetchSearchData, fetchSearchError]);
 
   const handleUpdate = async (values) => {
-    // const { categoryCode, category } = values;
-    // if (!categoryCode || !category) {
-    //   openNotification("warning", "Input Should not be Empty..!");
-    //   return;
-    // }
-    // try {
-    //   await axios.post("/api/updateCategory", {
-    //     id: categoryCode,
-    //     name: category,
-    //   });
-    //   openNotification("success", "Category Updated Successfully..!");
-    //   form.resetFields();
-    //   setCategories([]);
-    // } catch (error) {
-    //   openNotification("error", "Something went wrong..!");
-    // }
+    setLoading(true);
+    const data = {
+      departmentId: values.departmentCode,
+      departmentName: values.department,
+    };
+
+    fetchUpdate({
+      query: `v1.0/category/update`,
+      body: data,
+      method: "put",
+    });
+
+    setLoading(false);
   };
+
+  useEffect(() => {
+    if (fetchUpdateData) {
+      if (fetchUpdateData.status === true) {
+        notifySuccess(fetchUpdateData.message);
+        handleSearch({ keyword: "" });
+        form.resetFields();
+        setSelectedDepartment(null);
+
+        fetchnextID();
+      } else {
+        notifyError(fetchUpdateData.message);
+      }
+    }
+  }, [fetchUpdateData, fetchError]);
 
   const handleDelete = async () => {
     // const { categoryCode } = form.getFieldsValue();
@@ -151,17 +170,18 @@ const Department = () => {
     // }
   };
 
-  const handleClear = () => {
-    form.resetFields();
-    setSelectedDepartment(null);
-  };
-
   const handleRowClick = (record) => {
     form.setFieldsValue({
       departmentCode: record.id,
-      department: record.name,
+      department: record.departmentName,
     });
     setSelectedDepartment(record);
+  };
+
+  const handleInputChange = (e) => {
+    const keyword = e.target.value;
+
+    handleSearch({ keyword });
   };
 
   return (
@@ -174,17 +194,19 @@ const Department = () => {
           <Form form={form} layout="inline" onFinish={handleSearch}>
             <Form.Item name="keyword">
               <Input
+                prefix={<SearchOutlined />}
                 placeholder="Search..."
                 className="rounded-full shadow-xl"
+                onChange={handleInputChange}
               />
             </Form.Item>
-            <Form.Item>
+            {/* <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
                 icon={<SearchOutlined />}
               />
-            </Form.Item>
+            </Form.Item> */}
           </Form>
         </div>
 
@@ -219,7 +241,11 @@ const Department = () => {
               {selectedDepartment ? "Update" : "Submit"}
             </Button>
             <Button
-              onClick={() => form.resetFields()}
+              onClick={() => {
+                form.resetFields();
+                fetchnextID();
+                setSelectedDepartment(null);
+              }}
               icon={<ClearOutlined />}
               className="bg-yellow-500"
             >
@@ -235,7 +261,7 @@ const Department = () => {
             >
               Update
             </Button> */}
-               <Button
+            <Button
               danger
               onClick={handleDelete}
               icon={<DeleteOutlined />}
@@ -257,7 +283,11 @@ const Department = () => {
             dataSource={departments}
             columns={[
               { title: "Code", dataIndex: "id", key: "id" },
-              { title: "Department", dataIndex: "name", key: "name" },
+              {
+                title: "Department",
+                dataIndex: "departmentName",
+                key: "departmentName",
+              },
             ]}
             onRow={(record) => ({
               onClick: () => handleRowClick(record),
