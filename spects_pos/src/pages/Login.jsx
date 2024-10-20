@@ -4,12 +4,28 @@ import axios from 'axios';
 import 'tailwindcss/tailwind.css';
 import LoginImage from "../assets/loginImg3.png"
 import { useNavigate } from 'react-router-dom';
+import useFetch from '../hooks/useFetch';
+import useNotification from '../hooks/useNotification';
 const { Option } = Select;
 
 const Login = () => {
+  const [form] = Form.useForm();
+
   const [branches, setBranches] = useState([]);
   const [users, setUsers] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState(null);
+  const {
+    fetchData: fetchBranchData,
+    fetchAction: fetchBranchAction,
+    fetchError: fetchBranchError,
+  } = useFetch();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const { notifyError, notifySuccess } = useNotification();
+  const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
+
+
+
 
   const navigate = useNavigate();
 
@@ -17,6 +33,37 @@ const Login = () => {
     // You can add any login logic here if needed
     navigate('/dashboard');
   };
+
+  useEffect(() => {
+    getBranches();
+  }, []);
+
+  const getBranches = () => {
+    setLoading(true);
+   
+
+    fetchBranchAction({
+      query: `v1.0/branch`,
+      // params: data,
+      method: "get",
+    });
+
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (fetchBranchData) {
+      if (fetchBranchData.success === true) {
+        setBranches(fetchBranchData?.branchList);
+
+      } else {
+        notifyError(fetchBranchData.data);
+      }
+    }
+  }, [fetchBranchData, fetchBranchError]);
+
+  
 
   useEffect(() => {
     // Fetch branches when the component loads
@@ -35,18 +82,35 @@ const Login = () => {
   };
 
   const handleLogin = (values) => {
-    // axios.post('/api/login', values)
-    //   .then(response => {
-    //     if (response.data.success) {
-    //       message.success("Login successful");
-    //       // Redirect to another page
-    //       window.location.href = '/dashboard';
-    //     } else {
-    //       message.error("Authentication failed");
-    //     }
-    //   })
-    //   .catch(error => message.error("Login failed"));
+    setLoading(true);
+    const data = {
+      userName: values.userName,
+      branchName: values.branch,
+      password: values.password,
+    };
+
+    console.log("data", data);
+
+    fetchAction({
+      query: `v1.0/user/login`,
+      body: data,
+    });
+
+
+    setLoading(false);
   };
+
+  useEffect(() => {
+    if (fetchData) {
+      if (fetchData.success === true) {
+
+        notifySuccess("", fetchData?.status);
+        form.resetFields();
+      } else {
+        notifyError(fetchData.data);
+      }
+    }
+  }, [fetchData, fetchError]);
 
   return (
     <div className=" p-4 w-full mt-5 flex justify-center items-center ">
@@ -75,7 +139,7 @@ const Login = () => {
               >
                 {branches.map(branch => (
                   <Option key={branch.id} value={branch.id}>
-                    {branch.name}
+                    {branch.branchName}
                   </Option>
                 ))}
               </Select>

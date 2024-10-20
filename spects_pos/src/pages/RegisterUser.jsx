@@ -26,11 +26,7 @@ const RegisterUser = () => {
 
   const getBranches = (values) => {
     setLoading(true);
-    // const data = {
-    //   searchKey: "no",
-    // };
-
-    // console.log("data", data);
+   
 
     fetchBranchAction({
       query: `v1.0/branch`,
@@ -38,7 +34,6 @@ const RegisterUser = () => {
       method: "get",
     });
 
-    // console.log("fetchDAta", fetchData);
 
     setLoading(false);
   };
@@ -46,11 +41,9 @@ const RegisterUser = () => {
   useEffect(() => {
     if (fetchBranchData) {
       if (fetchBranchData.success === true) {
-        console.log("branch", fetchBranchData?.branchList);
         setBranches(fetchBranchData?.branchList);
 
-        // notifySuccess("", fetchBranchData?.status);
-        // message.success(fetchData?.status);
+     
       } else {
         notifyError(fetchBranchData.data);
       }

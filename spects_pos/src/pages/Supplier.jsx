@@ -46,7 +46,7 @@ const Supplier = () => {
       email: values.email,
       bank: values.bank,
       accNo: values.accNum,
-      openingBalance: "500000",
+      // openingBalance: "500000",
       refName: values.refName,
       refMobile: values.refMobile,
       userName: "oshani",
