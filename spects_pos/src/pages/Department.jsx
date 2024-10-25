@@ -114,6 +114,8 @@ const Department = () => {
     if (fetchSearchData) {
       if (fetchSearchData.success === true) {
         setDepartments(fetchSearchData.list);
+        fetchnextID();
+
         // form.setFieldsValue(fetchSearchData.supplierlist);
 
         // console.log("suppliers", fetchSearchData.supplierlist);
@@ -182,6 +184,8 @@ const Department = () => {
     const keyword = e.target.value;
 
     handleSearch({ keyword });
+    fetchnextID();
+
   };
 
   return (

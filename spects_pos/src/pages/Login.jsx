@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Select, Input, Button, Form, message,Image } from 'antd';
-import axios from 'axios';
-import 'tailwindcss/tailwind.css';
-import LoginImage from "../assets/loginImg3.png"
-import { useNavigate } from 'react-router-dom';
-import useFetch from '../hooks/useFetch';
-import useNotification from '../hooks/useNotification';
+import React, { useState, useEffect } from "react";
+import { Select, Input, Button, Form, message, Image } from "antd";
+import axios from "axios";
+import "tailwindcss/tailwind.css";
+import LoginImage from "../assets/loginImg3.png";
+import { useNavigate } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
+import useNotification from "../hooks/useNotification";
 const { Option } = Select;
 
 const Login = () => {
@@ -24,14 +24,11 @@ const Login = () => {
   const { notifyError, notifySuccess } = useNotification();
   const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
 
-
-
-
   const navigate = useNavigate();
 
   const handleOnClick = () => {
     // You can add any login logic here if needed
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   useEffect(() => {
@@ -40,14 +37,12 @@ const Login = () => {
 
   const getBranches = () => {
     setLoading(true);
-   
 
     fetchBranchAction({
-      query: `v1.0/branch`,
+      query: `v1.0/user/`,
       // params: data,
       method: "get",
     });
-
 
     setLoading(false);
   };
@@ -55,15 +50,14 @@ const Login = () => {
   useEffect(() => {
     if (fetchBranchData) {
       if (fetchBranchData.success === true) {
-        setBranches(fetchBranchData?.branchList);
-
+        setBranches(fetchBranchData?.list);
+        console.log(branches);
+        
       } else {
         notifyError(fetchBranchData.data);
       }
     }
   }, [fetchBranchData, fetchBranchError]);
-
-  
 
   useEffect(() => {
     // Fetch branches when the component loads
@@ -74,7 +68,6 @@ const Login = () => {
 
   const handleBranchChange = (branchId) => {
     // setSelectedBranch(branchId);
-    
     // // Fetch users based on the selected branch
     // axios.get(`/api/users?branch=${branchId}`)
     //   .then(response => setUsers(response.data))
@@ -96,14 +89,12 @@ const Login = () => {
       body: data,
     });
 
-
     setLoading(false);
   };
 
   useEffect(() => {
     if (fetchData) {
       if (fetchData.success === true) {
-
         notifySuccess("", fetchData?.status);
         form.resetFields();
       } else {
@@ -119,9 +110,9 @@ const Login = () => {
           <img src={LoginImage} alt="Image" className="w-full" />
         </div>
         <div className="col-span-7  justify-center p-8">
-        <h1 className="text-2xl font-bold mb-4 text-center font-sans">
-              Login !
-            </h1>
+          <h1 className="text-2xl font-bold mb-4 text-center font-sans">
+            Login !
+          </h1>
           <Form
             layout="vertical"
             onFinish={handleLogin}
@@ -131,27 +122,25 @@ const Login = () => {
             <Form.Item
               label="Select Branch"
               name="branch"
-              rules={[{ required: true, message: 'Please select a branch!' }]}
+              rules={[{ required: true, message: "Please select a branch!" }]}
             >
-              <Select
-                placeholder="Select Branch"
-                onChange={handleBranchChange}
-              >
-                {branches.map(branch => (
-                  <Option key={branch.id} value={branch.id}>
-                    {branch.branchName}
-                  </Option>
-                ))}
+              <Select placeholder="Select Branch" >
+                {branches &&
+                  branches.map((branch) => (
+                    <Option key={branch.id} value={branch.id}>
+                      {branch.branchName}
+                    </Option>
+                  ))}
               </Select>
             </Form.Item>
 
             <Form.Item
               label="Select Username"
               name="userName"
-              rules={[{ required: true, message: 'Please select a username!' }]}
+              rules={[{ required: true, message: "Please select a username!" }]}
             >
               <Select placeholder="Select Username" disabled={!selectedBranch}>
-                {users.map(user => (
+                {users.map((user) => (
                   <Option key={user.userName} value={user.userName}>
                     {user.userName}
                   </Option>
@@ -162,13 +151,20 @@ const Login = () => {
             <Form.Item
               label="Password"
               name="password"
-              rules={[{ required: true, message: 'Please input your password!' }]}
+              rules={[
+                { required: true, message: "Please input your password!" },
+              ]}
             >
               <Input.Password placeholder="Password" />
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" className="w-full mt-4 bg-purple-600" onClick={handleOnClick}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="w-full mt-4 bg-purple-600"
+                onClick={handleOnClick}
+              >
                 Login
               </Button>
               {/* <span className='mt-6'>Don't have an Account? <a href='/admin' className='font-semibold pt-3 text-blue-600' >Sign Up</a></span> */}

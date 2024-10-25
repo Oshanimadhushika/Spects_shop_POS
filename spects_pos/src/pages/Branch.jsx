@@ -11,16 +11,53 @@ const Branch = () => {
   const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
   const [loading, setLoading] = useState(false);
   const { notifyError, notifySuccess } = useNotification();
+  const { fetchData: fetchId, fetchAction: fetchIdAction } = useFetch();
+  const [nextId, setNextId] = useState(1);
+
+
 
   // console.log("success or false", fetchData?.status);
   // console.log("fetch data", fetchData);
 
+  useEffect(() => {
+    fetchnextID();
+  }, []);
+
+  // get nextId
+  const fetchnextID = (values) => {
+    setLoading(true);
+    // const data = {
+    //   code: values.categoryCode,
+    //   categoryName: values.category,
+    // };
+
+    // console.log("data",data);
+
+    fetchIdAction({
+      query: `v1.0/branch/next-id`,
+      // params: data,
+      method: "get",
+    });
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (fetchId) {
+      if (fetchId.status === true) {
+        setNextId(fetchId.message);
+        form.setFieldsValue({ branchCode: fetchId.message });
+      } else {
+        notifyError("Cannot find the ID..!");
+      }
+    }
+  }, [fetchId]);
 
 
   const Addbranch = (values) => {
     setLoading(true);
     const data = {
-      code: values.branchCode,
+      code: nextId,
       branchName: values.branchName,
     };
 
@@ -82,6 +119,7 @@ const Branch = () => {
               <Input
                 className="rounded-md border-2 border-gray-200 p-2 w-full"
                 placeholder="Branch Code"
+                value={nextId}
               />
             </Form.Item>
 

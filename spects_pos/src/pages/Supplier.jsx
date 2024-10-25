@@ -14,6 +14,8 @@ import useNotification from "../hooks/useNotification";
 
 const Supplier = () => {
   const [form] = Form.useForm();
+  const [form1] = Form.useForm();
+
   const [supplierData, setSupplierData] = useState(null);
   const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
   const {
@@ -30,12 +32,10 @@ const Supplier = () => {
   const [loading, setLoading] = useState(false);
   const { notifyError, notifySuccess } = useNotification();
   const [isModalVisible, setIsModalVisible] = useState(false);
-    const [originalValues, setOriginalValues] = useState(null);
-    const [supplierId, setSupplierId] = useState(null);
+  const [originalValues, setOriginalValues] = useState(null);
+  const [supplierId, setSupplierId] = useState(null);
 
-
-  // console.log("success1",fetchData?.status);
-
+// save supplier
   const handleSave = (values) => {
     setLoading(true);
     const data = {
@@ -46,13 +46,13 @@ const Supplier = () => {
       email: values.email,
       bank: values.bank,
       accNo: values.accNum,
+      teleLand: values.teleLand,
       // openingBalance: "500000",
       refName: values.refName,
       refMobile: values.refMobile,
-      userName: "oshani",
+      userName:"oshani",
     };
 
-    console.log("data", data);
 
     fetchAction({
       query: `v1.0/supplier/add`,
@@ -79,11 +79,14 @@ const Supplier = () => {
     }
   }, [fetchData, fetchError]);
 
+
+  // search supplier
+
   const handleSearch = async (values) => {
     console.log("handle search");
 
     const data = {
-      searchKey: values.keyword?values.keyword:" ",
+      searchKey: values.keyword ? values.keyword : "",
     };
 
     // console.log("data", data);
@@ -93,8 +96,6 @@ const Supplier = () => {
       params: data,
       method: "get",
     });
-
-   
   };
 
   useEffect(() => {
@@ -105,43 +106,46 @@ const Supplier = () => {
         // form.setFieldsValue(fetchSearchData.supplierlist);
 
         // console.log("suppliers", fetchSearchData.supplierlist);
-
       } else {
         notifyError(fetchSearchData.data);
       }
     }
   }, [fetchSearchData, fetchSearchError]);
 
+  // row click supplier
 
   const handleRowClick = (record) => {
     console.log("Record clicked:", record);
 
     form.setFieldsValue({
-      date: record.localDateTime ? record.localDateTime.split('T')[0] : '',
+      date: record.localDateTime ? record.localDateTime.split("T")[0] : "",
       code: record.code,
       name: record.name,
       address: record.address,
-      bank:record.bank,
+      bank: record.bank,
       teleMobile: record.mobile,
+      teleLand: record.teleLand,
       email: record.email,
       accNum: record.accNo,
       refName: record.refName,
-      refMobile: record.refMobile
+      refMobile: record.refMobile,
     });
-  
-    setSupplierId(record.supplierId)
+
+    setSupplierId(record.supplierId);
     setOriginalValues(record);
-    setIsModalVisible(false); 
+    setIsModalVisible(false);
   };
 
+  // update supplier
 
   const handleUpdate = async (values) => {
     const data = {
-      supplierId:supplierId,
+      supplierId: supplierId,
       code: values.code,
       name: values.name,
       address: values.address,
       mobile: values.teleMobile,
+      teleLand: values.teleLand,
       email: values.email,
       bank: values.bank,
       accNo: values.accNum,
@@ -162,7 +166,6 @@ const Supplier = () => {
     // console.log("fetchDAta", fetchData);
 
     setLoading(false);
-
   };
 
   useEffect(() => {
@@ -179,6 +182,7 @@ const Supplier = () => {
     }
   }, [fetchUpdateData, fetchUpdateError]);
 
+  // delete supplier
 
   const handleDelete = async (values) => {
     try {
@@ -252,18 +256,16 @@ const Supplier = () => {
 
   const handleSubmit = () => {
     form
-      .validateFields() // Validate the fields
+      .validateFields() 
       .then((values) => {
         if (originalValues) {
-          // If original values exist, call the update function
           handleUpdate(values);
         } else {
-          // If no original values, call the save function
           handleSave(values);
         }
       })
       .catch((errorInfo) => {
-        console.log('Validation Failed:', errorInfo);
+        console.log("Validation Failed:", errorInfo);
       });
   };
 
@@ -274,7 +276,7 @@ const Supplier = () => {
           <h1 className="text-md font-semibold">
             Supplier <span className="text-red-500">Master</span>
           </h1>
-          <Form  layout="inline" onFinish={handleSearch}>
+          <Form form={form1} layout="inline" onFinish={handleSearch}>
             <Form.Item name="keyword">
               <Input
                 placeholder="Search..."
@@ -286,7 +288,6 @@ const Supplier = () => {
                 type="primary"
                 htmlType="submit"
                 icon={<SearchOutlined />}
-                // onClick={handleSearch}
               />
             </Form.Item>
           </Form>
@@ -294,7 +295,6 @@ const Supplier = () => {
 
         <Form
           form={form}
-          // onFinish={handleSave}
           className="space-y-4"
           requiredMark={false}
         >
@@ -340,23 +340,17 @@ const Supplier = () => {
 
           {/* ============================== */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Form.Item
-            label="Bank "
-            name="bank"
-            rules={[{ required: true }]}
-          >
-            <Input className="" />
-          </Form.Item>
+            <Form.Item label="Bank " name="bank" rules={[{ required: true }]}>
+              <Input className="" />
+            </Form.Item>
             <Form.Item
-            label="Bank Account No"
-            name="accNum"
-            rules={[{ required: true }]}
-          >
-            <Input className="" />
-          </Form.Item>
+              label="Bank Account No"
+              name="accNum"
+              rules={[{ required: true }]}
+            >
+              <Input className="" />
+            </Form.Item>
           </div>
-
-        
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Form.Item
@@ -381,10 +375,9 @@ const Supplier = () => {
               htmlType="submit"
               className="bg-blue-600 text-white w-1/4"
               onClick={handleSubmit}
-
             >
               {/* Submit */}
-              {originalValues ? 'Update' : 'Submit'}
+              {originalValues ? "Update" : "Submit"}
             </Button>
             {/* <Button
               type="primary"
@@ -395,7 +388,9 @@ const Supplier = () => {
               Update
             </Button> */}
             <Button
-              onClick={() => form.resetFields()}
+              onClick={() =>{ form.resetFields()
+                form1.resetFields()}
+              }
               className="bg-yellow-500 text-white w-1/4"
             >
               Clear
@@ -418,21 +413,21 @@ const Supplier = () => {
           </div>
         </Form>
 
-         <Modal
+        <Modal
           title="Select Supplier"
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)}
-          footer={null} 
-          width={800} 
+          footer={null}
+          width={800}
         >
           <Table
             columns={columns}
             dataSource={supplierData}
             rowKey="supplierId"
             onRow={(record) => ({
-              onClick: () => handleRowClick(record), 
+              onClick: () => handleRowClick(record),
             })}
-            pagination={false} 
+            pagination={false}
             scroll={{ x: 1200 }}
           />
         </Modal>

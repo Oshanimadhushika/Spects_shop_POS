@@ -26,6 +26,7 @@ const Category = () => {
   const { fetchData: fetchId, fetchAction: fetchIdAction } = useFetch();
 
   const [nextId, setNextId] = useState(1);
+
   const {
     fetchData: fetchSearchData,
     fetchAction: fetchSearch,
@@ -127,6 +128,8 @@ const Category = () => {
     if (fetchSearchData) {
       if (fetchSearchData?.success === true) {
         setCategories(fetchSearchData.list);
+                fetchnextID();
+
       } else {
         notifyError("Error Fetching Data..!");
       }
@@ -195,6 +198,8 @@ const Category = () => {
     const keyword = e.target.value;
 
     handleSearch({ keyword });
+    fetchnextID();
+
   };
   return (
     <div className="w-full  items-center justify-center p-4 ">
