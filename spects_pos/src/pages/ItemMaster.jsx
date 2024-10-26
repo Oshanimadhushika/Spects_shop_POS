@@ -40,6 +40,12 @@ const ItemMaster = () => {
     fetchError: fetchUpdateError,
   } = useFetch();
 
+  const {
+    fetchData: fetchDeleteData,
+    fetchAction: fetchDelete,
+    fetchError: fetchDeleteError,
+  } = useFetch();
+
   const [loading, setLoading] = useState(false);
   const { notifyError, notifySuccess } = useNotification();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -73,6 +79,8 @@ const ItemMaster = () => {
     if (fetchSearchData) {
       if (fetchSearchData.success === true) {
         setItemData(fetchSearchData.itemList);
+        console.log("item dta",itemData);
+        
       } else {
         notifyError(fetchSearchData.data);
       }
@@ -137,7 +145,7 @@ const ItemMaster = () => {
     };
 
     fetchUpdate({
-      query: `v1.0/category/update`,
+      query: `v1.0/item/update`,
       body: data,
       method: "put",
     });
@@ -159,37 +167,56 @@ const ItemMaster = () => {
     }
   }, [fetchUpdateData, fetchError]);
 
-  const handleDelete = async () => {
-    // if (!selectedItem) {
-    //   message.warning('Please select an item');
-    //   return;
-    // }
-    //     try {
-    //       await axios.post('/api/deleteItem', { itemCode: selectedItem.itemCode });
-    //       message.success('Item deleted successfully');
+    // delete item
+    const handleDelete = async (values) => {
+      // setLoading(true);
+      // const data = {
+      //   id: values.id,
+      // };
+  
+      // fetchDelete({
+      //   query: `v1.0/category/add`,
+      //   body: data,
+      //   // method: "get",
+      // });
+  
+      // setLoading(false);
+    };
+  
+    // useEffect(() => {
+  
+    //   if (fetchDeleteData) {
+    //     if (fetchDeleteData.status === true) {
+    //       notifySuccess(fetchDeleteData.message);
     //       form.resetFields();
-    //       setSelectedItem(null);
-    //     } catch (error) {
-    //       message.error('Delete failed');
+    //       fetchnextID();
+    //     } else {
+    //       notifyError(fetchData.message);
     //     }
-  };
+    //   }
+    // }, [fetchData, fetchError]);
+  
+  
+    
+    // search
+    
 
   const columns = [
-    { title: "Code", dataIndex: "code", key: "code" },
+    { title: "Code", dataIndex: "itemCode", key: "itemCode" },
     { title: "BarCode", dataIndex: "barcode", key: "barcode" },
     { title: "Description", dataIndex: "description", key: "description" },
-    { title: "Department", dataIndex: "department", key: "department" },
+    { title: "Department", dataIndex: ["department", "departmentName"], key: "department" }, 
     { title: "Category", dataIndex: "category", key: "category" },
-    { title: "Supplier", dataIndex: "supplier", key: "supplier" },
+    { title: "Supplier", dataIndex: ["supplierList",  "supCode"], key: "supplier" },
     { title: "Cost", dataIndex: "cost", key: "cost" },
     { title: "Profit", dataIndex: "profit", key: "profit" },
-    { title: "Sales Price", dataIndex: "salesPrice", key: "salesPrice" },
-    { title: "Discount Rs", dataIndex: "discountRs", key: "discountRs" },
-    { title: "Wholesale", dataIndex: "wholesale", key: "wholesale" },
+    { title: "Sales Price", dataIndex: "salePrice", key: "salesPrice" }, 
+    { title: "Discount Rs", dataIndex: "discount", key: "discount" },
+    { title: "Wholesale", dataIndex: "wholesalePrice", key: "wholesale" }, 
     { title: "Location", dataIndex: "location", key: "location" },
-    // { title: "MaxStockQty", dataIndex: "maxStockQty", key: "maxStockQty" },
-    // { title: "MinStockQty", dataIndex: "minStockQty", key: "minStockQty" },
+  
   ];
+  
 
   const onRowClick = (record) => {
     form.setFieldsValue({
@@ -201,9 +228,9 @@ const ItemMaster = () => {
       supplierId: record.supplier,
       cost: record.cost,
       profit: record.profit,
-      salePrice: record.salesPrice,
-      discount: record.discountRs,
-      wholesalePrice: record.wholesale,
+      salesPrice: record.salePrice,
+      discountRs: record.discount,
+      wholesale: record.wholesalePrice,
       location: record.location,
     });
     setSelectedItem(record);
@@ -293,7 +320,7 @@ const ItemMaster = () => {
                 <Select placeholder="Select department">
                   {departments.map((dept) => (
                     <Option key={dept.id} value={dept.id}>
-                      {dept.name}
+                      {dept.departmentName}
                     </Option>
                   ))}
                 </Select>
@@ -307,7 +334,7 @@ const ItemMaster = () => {
               >
                 <Select placeholder="Select category">
                   {categories.map((cat) => (
-                    <Option key={cat.id} value={cat.name}>
+                    <Option key={cat.id} value={cat.id}>
                       {cat.name}
                     </Option>
                   ))}
@@ -322,7 +349,7 @@ const ItemMaster = () => {
               >
                 <Select placeholder="Select supplier">
                   {suppliers.map((sup) => (
-                    <Option key={sup.id} value={sup.name}>
+                    <Option key={sup.supplierId} value={sup.supplierId}>
                       {sup.name}
                     </Option>
                   ))}
@@ -471,27 +498,10 @@ const ItemMaster = () => {
           onRow={(record) => ({
             onClick: () => onRowClick(record),
           })}
-          scroll={{ x: true, y: "100%" }}
-        />
+          pagination={false} 
+          scroll={{ x: 'max-content', y: '100%' }}        />
 
-        {/* <Modal
-          title="Select Supplier"
-          visible={isModalVisible}
-          onCancel={() => setIsModalVisible(false)}
-          footer={null}
-          width={800}
-        >
-          <Table
-            columns={columns}
-            dataSource={itemData}
-            rowKey="supplierId"
-            onRow={(record) => ({
-              onClick: () => onRowClick(record),
-            })}
-            pagination={false}
-            scroll={{ x: 1200 }}
-          />
-        </Modal> */}
+      
       </div>
     </div>
   );

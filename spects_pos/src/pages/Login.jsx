@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Select, Input, Button, Form, message, Image } from "antd";
 import axios from "axios";
 import "tailwindcss/tailwind.css";
@@ -6,72 +6,48 @@ import LoginImage from "../assets/loginImg3.png";
 import { useNavigate } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import useNotification from "../hooks/useNotification";
+import { DataContext } from "../context/DataContext";
+import { setLocalStorageData } from "../helpers/StorageHelper";
 const { Option } = Select;
 
 const Login = () => {
   const [form] = Form.useForm();
 
-  const [branches, setBranches] = useState([]);
+  // const [branches, setBranches] = useState([]);
   const [users, setUsers] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const {
-    fetchData: fetchBranchData,
-    fetchAction: fetchBranchAction,
-    fetchError: fetchBranchError,
+    fetchData: fetchUserData,
+    fetchAction: fetchUserAction,
+    fetchError: fetchUserError,
   } = useFetch();
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const { notifyError, notifySuccess } = useNotification();
   const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
+  const { branches, usersInBranch, setUsersInBranch} = useContext(DataContext);
 
   const navigate = useNavigate();
 
-  const handleOnClick = () => {
-    // You can add any login logic here if needed
-    navigate("/dashboard");
-  };
 
-  useEffect(() => {
-    getBranches();
-  }, []);
 
-  const getBranches = () => {
-    setLoading(true);
-
-    fetchBranchAction({
-      query: `v1.0/user/`,
-      // params: data,
-      method: "get",
-    });
-
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    if (fetchBranchData) {
-      if (fetchBranchData.success === true) {
-        setBranches(fetchBranchData?.list);
-        console.log(branches);
-        
-      } else {
-        notifyError(fetchBranchData.data);
-      }
-    }
-  }, [fetchBranchData, fetchBranchError]);
-
-  useEffect(() => {
-    // Fetch branches when the component loads
-    // axios.get('/api/branches')
-    //   .then(response => setBranches(response.data))
-    //   .catch(error => message.error("Failed to fetch branches"));
-  }, []);
 
   const handleBranchChange = (branchId) => {
-    // setSelectedBranch(branchId);
-    // // Fetch users based on the selected branch
-    // axios.get(`/api/users?branch=${branchId}`)
-    //   .then(response => setUsers(response.data))
-    //   .catch(error => message.error("Failed to fetch users"));
+    setSelectedBranch(branchId);
+
+    if (usersInBranch && Array.isArray(usersInBranch)) {
+      const selectedBranchData = usersInBranch.find(
+        (branch) => branch.branch.id === branchId
+      );
+
+      if (selectedBranchData) {
+        setUsers(selectedBranchData.users);
+      } else {
+        setUsers([]);
+      }
+    } else {
+      console.error("usersInBranch is not defined or not an array");
+    }
   };
 
   const handleLogin = (values) => {
@@ -89,6 +65,7 @@ const Login = () => {
       body: data,
     });
 
+    setLocalStorageData("authData", data);
     setLoading(false);
   };
 
@@ -96,9 +73,10 @@ const Login = () => {
     if (fetchData) {
       if (fetchData.success === true) {
         notifySuccess("", fetchData?.status);
+        navigate("/dashboard");
         form.resetFields();
       } else {
-        notifyError(fetchData.data);
+        notifyError(fetchData.status);
       }
     }
   }, [fetchData, fetchError]);
@@ -124,11 +102,12 @@ const Login = () => {
               name="branch"
               rules={[{ required: true, message: "Please select a branch!" }]}
             >
-              <Select placeholder="Select Branch" >
-                {branches &&
-                  branches.map((branch) => (
-                    <Option key={branch.id} value={branch.id}>
-                      {branch.branchName}
+              <Select placeholder="Select Branch" onChange={handleBranchChange}>
+                {console.log("branch", usersInBranch)}
+                {usersInBranch &&
+                  usersInBranch.map((branch) => (
+                    <Option key={branch.branch.id} value={branch.branch.branchName}>
+                      {branch.branch.branchName}
                     </Option>
                   ))}
               </Select>
@@ -141,7 +120,7 @@ const Login = () => {
             >
               <Select placeholder="Select Username" disabled={!selectedBranch}>
                 {users.map((user) => (
-                  <Option key={user.userName} value={user.userName}>
+                  <Option key={user.id} value={user.userName}>
                     {user.userName}
                   </Option>
                 ))}
@@ -163,7 +142,7 @@ const Login = () => {
                 type="primary"
                 htmlType="submit"
                 className="w-full mt-4 bg-purple-600"
-                onClick={handleOnClick}
+                // onClick={handleOnClick}
               >
                 Login
               </Button>

@@ -47,16 +47,9 @@ const Category = () => {
   // get nextId
   const fetchnextID = (values) => {
     setLoading(true);
-    // const data = {
-    //   code: values.categoryCode,
-    //   categoryName: values.category,
-    // };
-
-    // console.log("data",data);
-
+   
     fetchIdAction({
       query: `v1.0/category/next-id`,
-      // params: data,
       method: "get",
     });
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Input, Button, Form, message, Modal, Table } from "antd";
 import "tailwindcss/tailwind.css";
 import axios from "axios";
@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import useFetch from "../hooks/useFetch";
 import useNotification from "../hooks/useNotification";
+import { DataContext } from "../context/DataContext";
 
 const Supplier = () => {
   const [form] = Form.useForm();
@@ -34,6 +35,9 @@ const Supplier = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [originalValues, setOriginalValues] = useState(null);
   const [supplierId, setSupplierId] = useState(null);
+  const {authData}= useContext(DataContext);
+  console.log("auth data",authData);
+  
 
 // save supplier
   const handleSave = (values) => {
@@ -43,14 +47,14 @@ const Supplier = () => {
       name: values.name,
       address: values.address,
       mobile: values.teleMobile,
+      teleLand: values.teleLand,
       email: values.email,
       bank: values.bank,
       accNo: values.accNum,
-      teleLand: values.teleLand,
       // openingBalance: "500000",
       refName: values.refName,
       refMobile: values.refMobile,
-      userName:"oshani",
+      userId:1,
     };
 
 
@@ -152,7 +156,7 @@ const Supplier = () => {
       // openingBalance: "500000",
       refName: values.refName,
       refMobile: values.refMobile,
-      userName: "oshani",
+      userId:1,
     };
 
     console.log("data", data);
