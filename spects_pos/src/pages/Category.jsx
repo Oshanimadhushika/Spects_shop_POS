@@ -128,7 +128,7 @@ const Category = () => {
     if (fetchSearchData) {
       if (fetchSearchData?.success === true) {
         setCategories(fetchSearchData.list);
-                fetchnextID();
+        fetchnextID();
 
       } else {
         notifyError("Error Fetching Data..!");

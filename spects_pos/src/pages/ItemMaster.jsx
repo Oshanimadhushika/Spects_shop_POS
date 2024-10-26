@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Form,
   Input,
@@ -15,14 +15,15 @@ import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import useNotification from "../hooks/useNotification";
 import useFetch from "../hooks/useFetch";
+import { DataContext } from "../context/DataContext";
 
 const { Option } = Select;
 
 const ItemMaster = () => {
   const [form] = Form.useForm();
-  const [departments, setDepartments] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [suppliers, setSuppliers] = useState([]);
+  // const [departments, setDepartments] = useState([]);
+  // const [categories, setCategories] = useState([]);
+  // const [suppliers, setSuppliers] = useState([]);
   const [lastItemCode, setLastItemCode] = useState("");
   const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -43,57 +44,42 @@ const ItemMaster = () => {
   const { notifyError, notifySuccess } = useNotification();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [itemData, setItemData] = useState(null);
+  const { branches, departments, categories, suppliers} = useContext(DataContext);
 
   useEffect(() => {
-    // Fetch data for departments, categories, suppliers, and last item code
-    const fetchData = async () => {
-      //   try {
-      //     const [deptRes, catRes, supRes, lastCodeRes] = await Promise.all([
-      //       axios.get('/api/departments'),
-      //       axios.get('/api/categories'),
-      //       axios.get('/api/suppliers'),
-      //       axios.get('/api/lastItemCode')
-      //     ]);
-      //     setDepartments(deptRes.data);
-      //     setCategories(catRes.data);
-      //     setSuppliers(supRes.data);
-      //     setLastItemCode(lastCodeRes.data);
-      //   } catch (error) {
-      //     message.error('Failed to fetch data');
-      //   }
-    };
-
-    fetchData();
+    handleSearch({ keyword: "" });
   }, []);
 
+  // search item
   const handleSearch = async (values) => {
-    const data = {
-      searchKey: values.keyword,
-    };
+    const searchKey = values.keyword ? values.keyword : "";
 
-    // console.log("data", data);
+    const data = {
+      searchKey,
+    };
 
     fetchSearch({
       query: `v1.0/item`,
       params: data,
       method: "get",
     });
+
+    if (!searchKey) {
+      form.resetFields();
+    }
   };
 
   useEffect(() => {
     if (fetchSearchData) {
       if (fetchSearchData.success === true) {
         setItemData(fetchSearchData.itemList);
-        // setIsModalVisible(true);
-        // form.setFieldsValue(fetchSearchData.supplierlist);
-
-        // console.log("suppliers", fetchSearchData.supplierlist);
       } else {
         notifyError(fetchSearchData.data);
       }
     }
   }, [fetchSearchData, fetchSearchError]);
 
+  // save item
   const handleSubmit = async (values) => {
     const data = {
       itemCode: values.itemCode,
@@ -101,7 +87,7 @@ const ItemMaster = () => {
       description: values.description,
       category: values.category,
       departmentId: values.department,
-      supplierId: values.supplier, 
+      supplierId: values.supplier,
       cost: values.cost,
       profit: values.profit,
       salePrice: values.salesPrice,
@@ -117,8 +103,61 @@ const ItemMaster = () => {
       body: data,
       // method: "get",
     });
-
   };
+
+  useEffect(() => {
+    if (fetchData) {
+      if (fetchData.status === true) {
+        notifySuccess(fetchData.message);
+        handleSearch({ keyword: "" });
+        form.resetFields();
+        setSelectedItem(null);
+      } else {
+        notifyError(fetchData.message);
+      }
+    }
+  }, [fetchData, fetchError]);
+
+  // update item
+  const handleUpdate = async (values) => {
+    setLoading(true);
+    const data = {
+      itemCode: values.itemCode,
+      barcode: values.barcode,
+      description: values.description,
+      category: values.category,
+      departmentId: values.department,
+      supplierId: values.supplier,
+      cost: values.cost,
+      profit: values.profit,
+      salePrice: values.salesPrice,
+      discount: values.discountRs,
+      wholesalePrice: values.wholesale,
+      location: values.location,
+    };
+
+    fetchUpdate({
+      query: `v1.0/category/update`,
+      body: data,
+      method: "put",
+    });
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (fetchUpdateData) {
+      if (fetchUpdateData.status === true) {
+        notifySuccess(fetchUpdateData.message);
+        handleSearch({ keyword: "" });
+        form.resetFields();
+        setSelectedItem(null);
+        // fetchnextID();
+      } else {
+        notifyError(fetchUpdateData.message);
+      }
+    }
+  }, [fetchUpdateData, fetchError]);
 
   const handleDelete = async () => {
     // if (!selectedItem) {
@@ -153,7 +192,20 @@ const ItemMaster = () => {
   ];
 
   const onRowClick = (record) => {
-    form.setFieldsValue(record);
+    form.setFieldsValue({
+      itemCode: record.itemCode,
+      barcode: record.barcode,
+      description: record.description,
+      category: record.category,
+      departmentId: record.department,
+      supplierId: record.supplier,
+      cost: record.cost,
+      profit: record.profit,
+      salePrice: record.salesPrice,
+      discount: record.discountRs,
+      wholesalePrice: record.wholesale,
+      location: record.location,
+    });
     setSelectedItem(record);
   };
 
@@ -191,7 +243,7 @@ const ItemMaster = () => {
         <Form
           form={form}
           layout="vertical"
-          onFinish={handleSubmit}
+          onFinish={selectedItem ? handleUpdate : handleSubmit}
           requiredMark={false}
         >
           <Row gutter={16}>
@@ -388,11 +440,15 @@ const ItemMaster = () => {
               htmlType="submit"
               className="mr-2 bg-purple-500 hover:bg-blue-500 text-white font-semibold p-3 rounded-md"
             >
-              Submit
+              {selectedItem ? "Update" : "Submit"}
             </Button>
             <Button
               type="default"
-              onClick={() => form.resetFields()}
+              onClick={() => {
+                form.resetFields();
+                // fetchnextID();
+                setSelectedItem(null);
+              }}
               className="mr-2 border-2 border-blue-600 text-blue-600"
             >
               Clear
