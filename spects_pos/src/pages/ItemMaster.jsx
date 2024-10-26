@@ -16,6 +16,7 @@ import { FaHome } from "react-icons/fa";
 import useNotification from "../hooks/useNotification";
 import useFetch from "../hooks/useFetch";
 import { DataContext } from "../context/DataContext";
+import { SearchOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -48,7 +49,6 @@ const ItemMaster = () => {
 
   const [loading, setLoading] = useState(false);
   const { notifyError, notifySuccess } = useNotification();
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [itemData, setItemData] = useState(null);
   const { branches, departments, categories, suppliers} = useContext(DataContext);
 
@@ -79,7 +79,7 @@ const ItemMaster = () => {
     if (fetchSearchData) {
       if (fetchSearchData.success === true) {
         setItemData(fetchSearchData.itemList);
-        console.log("item dta",itemData);
+        // console.log("item dta",itemData);
         
       } else {
         notifyError(fetchSearchData.data);
@@ -93,6 +93,7 @@ const ItemMaster = () => {
       itemCode: values.itemCode,
       barcode: values.barcode,
       description: values.description,
+      branch:2,
       category: values.category,
       departmentId: values.department,
       supplierId: values.supplier,
@@ -116,7 +117,7 @@ const ItemMaster = () => {
   useEffect(() => {
     if (fetchData) {
       if (fetchData.status === true) {
-        notifySuccess(fetchData.message);
+        notifySuccess(fetchData.status);
         handleSearch({ keyword: "" });
         form.resetFields();
         setSelectedItem(null);
@@ -133,6 +134,7 @@ const ItemMaster = () => {
       itemCode: values.itemCode,
       barcode: values.barcode,
       description: values.description,
+      branch:2,
       category: values.category,
       departmentId: values.department,
       supplierId: values.supplier,
@@ -156,7 +158,7 @@ const ItemMaster = () => {
   useEffect(() => {
     if (fetchUpdateData) {
       if (fetchUpdateData.status === true) {
-        notifySuccess(fetchUpdateData.message);
+        notifySuccess(fetchUpdateData.status);
         handleSearch({ keyword: "" });
         form.resetFields();
         setSelectedItem(null);
@@ -207,7 +209,7 @@ const ItemMaster = () => {
     { title: "Description", dataIndex: "description", key: "description" },
     { title: "Department", dataIndex: ["department", "departmentName"], key: "department" }, 
     { title: "Category", dataIndex: "category", key: "category" },
-    { title: "Supplier", dataIndex: ["supplierList",  "supCode"], key: "supplier" },
+    { title: "Supplier", dataIndex: ["supplierList",  "supName"], key: "supplier" },
     { title: "Cost", dataIndex: "cost", key: "cost" },
     { title: "Profit", dataIndex: "profit", key: "profit" },
     { title: "Sales Price", dataIndex: "salePrice", key: "salesPrice" }, 
@@ -236,6 +238,14 @@ const ItemMaster = () => {
     setSelectedItem(record);
   };
 
+  const handleInputChange = (e) => {
+    const keyword = e.target.value;
+
+    handleSearch({ keyword });
+    // fetchnextID();
+  };
+
+
   return (
     <div className="bg-white  p-4 w-full max-h-full ">
       <div className="grid grid-cols-12 gap-4  w-full">
@@ -253,18 +263,16 @@ const ItemMaster = () => {
           </Link>
         </div>
       </div>
-      <Form.Item>
-        <Form layout="inline" onFinish={handleSearch}>
-          <Form.Item name="keyword">
-            <Input placeholder="Search..." />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Search
-            </Button>
-          </Form.Item>
-        </Form>
-      </Form.Item>
+      <Form layout="inline" onFinish={handleSearch}>
+        <Form.Item name="keyword">
+          <Input
+            prefix={<SearchOutlined />}
+            placeholder="Search..."
+            className="rounded-full shadow-xl mb-4"
+            onChange={handleInputChange}
+          />
+        </Form.Item>
+      </Form>
 
       <div className="p-5 bg-gray-200 justify-center rounded-xl shadow-xl">
         <Form

@@ -353,7 +353,7 @@ const CustomerRegister = () => {
                 },
               ]}
             >
-              <Input />
+              <Input maxLength={10} />
             </Form.Item>
           </Col>
         </Row>
@@ -377,7 +377,7 @@ const CustomerRegister = () => {
                 { required: true, message: "Please enter a mobile number!" },
               ]}
             >
-              <Input />
+              <Input maxLength={10} />
             </Form.Item>
           </Col>
           <Col xs={24} sm={12} md={8} lg={4} xl={5}>
@@ -399,7 +399,7 @@ const CustomerRegister = () => {
                 { required: true, message: "Please enter a landline number!" },
               ]}
             >
-              <Input />
+              <Input maxLength={10}/>
             </Form.Item>
           </Col>
         </Row>
@@ -414,7 +414,7 @@ const CustomerRegister = () => {
                 { required: true, message: "Please enter the ID number!" },
               ]}
             >
-              <Input />
+              <Input maxLength={12}/>
             </Form.Item>
           </Col>
           <Col xs={24} sm={12} md={8} lg={4} xl={5}>
@@ -529,15 +529,15 @@ const CustomerRegister = () => {
             htmlType="submit"
             className="mr-2 w-1/5 bg-purple-500 hover:bg-blue-500 text-white font-semibold p-3 rounded-md"
           >
-            Submit
-          </Button>
-          <Button
+              {selectedCustomer ? "Update" : "Submit"}
+              </Button>
+          {/* <Button
             type="default"
             // onClick={() => form.resetFields()}
             className="mr-2 w-1/5 border-2 border-green-600 text-green-600"
           >
             Update
-          </Button>
+          </Button> */}
           <Button
             type="default"
             onClick={() => {
