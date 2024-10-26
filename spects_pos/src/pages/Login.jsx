@@ -29,19 +29,27 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+// console.log("userinBranch",usersInBranch);
 
 
 
   const handleBranchChange = (branchId) => {
+    // console.log("branchid",branchId);
+    
     setSelectedBranch(branchId);
 
     if (usersInBranch && Array.isArray(usersInBranch)) {
       const selectedBranchData = usersInBranch.find(
-        (branch) => branch.branch.id === branchId
+        (branch) => branch.branch.branchName === branchId
       );
+
+      // console.log("selected branch",selectedBranchData);
+      
 
       if (selectedBranchData) {
         setUsers(selectedBranchData.users);
+        // console.log("user in selected branch",users);
+        
       } else {
         setUsers([]);
       }
@@ -53,7 +61,7 @@ const Login = () => {
   const handleLogin = (values) => {
     setLoading(true);
     const data = {
-      userName: values.userName,
+      username: values.userName,
       branchName: values.branch,
       password: values.password,
     };
@@ -80,6 +88,8 @@ const Login = () => {
       }
     }
   }, [fetchData, fetchError]);
+
+  
 
   return (
     <div className=" p-4 w-full mt-5 flex justify-center items-center ">
@@ -142,7 +152,7 @@ const Login = () => {
                 type="primary"
                 htmlType="submit"
                 className="w-full mt-4 bg-purple-600"
-                // onClick={handleOnClick}
+                // onClick={navigate("/dashboard")}
               >
                 Login
               </Button>

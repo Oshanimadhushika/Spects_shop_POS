@@ -14,7 +14,7 @@ export const DataProvider = ({ children }) => {
     getLocalStoragedata("authData") ? getLocalStoragedata("authData") : null
   );
 
-  console.log("auth data in context",authData);
+  // console.log("auth data in context",authData);
   
 
   const [suppliers, setSuppliers] = useState([]);
@@ -111,7 +111,7 @@ export const DataProvider = ({ children }) => {
   // console.log("de",departments);
   // console.log("cat",categories);
   // console.log("sup",suppliers);
-  console.log("branch in context ",usersInBranch);
+  // console.log("branch in context ",usersInBranch);
 
 
   const contextValue = {
@@ -121,7 +121,7 @@ export const DataProvider = ({ children }) => {
     suppliers,
     usersInBranch,
     authData,
-     setAuthData,
+    setAuthData,
     loading,
     errors: { fetchBranchError, fetchDepartmentError, fetchCategoryError, fetchSupplierError,fetchUserError },
   };

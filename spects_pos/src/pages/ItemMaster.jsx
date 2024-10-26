@@ -116,7 +116,7 @@ const ItemMaster = () => {
 
   useEffect(() => {
     if (fetchData) {
-      if (fetchData.status === true) {
+      if (fetchData.success === true) {
         notifySuccess(fetchData.status);
         handleSearch({ keyword: "" });
         form.resetFields();
@@ -158,7 +158,7 @@ const ItemMaster = () => {
   useEffect(() => {
     if (fetchUpdateData) {
       if (fetchUpdateData.status === true) {
-        notifySuccess(fetchUpdateData.status);
+        notifySuccess(fetchUpdateData.message);
         handleSearch({ keyword: "" });
         form.resetFields();
         setSelectedItem(null);
