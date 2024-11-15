@@ -87,7 +87,7 @@ function JobStatus() {
       <Row gutter={[16, 16]} justify="space-between">
         {/* Header Title */}
         <Col span={20}>
-          <Title level={3}>
+          <Title level={3} className="font-bold">
             Job <span className="text-purple-500">Status</span>
           </Title>
         </Col>
