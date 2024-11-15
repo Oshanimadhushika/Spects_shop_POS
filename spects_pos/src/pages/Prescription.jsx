@@ -117,19 +117,19 @@ const Prescription = () => {
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="VA" name="rightVA" className="mb-0">
+                <Form.Item label="P/H" name="rightVA" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="VA" name="rightVA" className="mb-0">
+                <Form.Item label="H/M" name="rightVA" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="VA" name="rightVA" className="mb-0">
+                <Form.Item label="IOL" name="rightVA" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="VA" name="rightVA" className="mb-0">
+                <Form.Item label="Sub" name="rightVA" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
                 {/* Add more fields as necessary */}
@@ -140,19 +140,19 @@ const Prescription = () => {
                   <Input value={assessment.leftVa} />
                 </Form.Item>
 
-                <Form.Item label="VA" name="rightVA" className="mb-0">
+                <Form.Item label="P/H" name="rightVA" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="VA" name="rightVA" className="mb-0">
+                <Form.Item label="H/M" name="rightVA" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="VA" name="rightVA" className="mb-0">
+                <Form.Item label="IOL" name="rightVA" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="VA" name="rightVA" className="mb-0">
+                <Form.Item label="Sub" name="rightVA" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
                 {/* Add more fields as necessary */}
