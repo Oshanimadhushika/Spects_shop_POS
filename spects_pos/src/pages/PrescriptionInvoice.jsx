@@ -186,6 +186,7 @@ const PrescriptionInvoice = () => {
               <AntdInput className="h-10 text-green-600 font-bold" value={3000}/>
             </Form.Item>
             <Form.Item name="officer">
+              <label className="font-bold text-xs">Officer</label>
               <Select
                 className="h-10"
                 placeholder="Select Officer"
@@ -195,6 +196,21 @@ const PrescriptionInvoice = () => {
                 <Option value="Gayan">Gayan</Option>
                 <Option value="Heshan">Heshan</Option>
                 <Option value="Janu">Janu</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item name="stock">
+            <label className="font-bold text-xs">Stock</label>
+
+              <Select
+                className="h-10"
+                placeholder="Select Stoke"
+                // onChange={handleOfficerChange}
+                // value={officer}
+              >
+                <Option value="Showroom">Showroom</Option>
+                {/* <Option value="Heshan">Heshan</Option>
+                <Option value="Janu">Janu</Option> */}
               </Select>
             </Form.Item>
           </div>
@@ -211,7 +227,6 @@ const PrescriptionInvoice = () => {
             />
             {/* )} */}
 
-          
           </div>
         </div>
       </Form>

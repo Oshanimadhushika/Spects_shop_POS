@@ -161,7 +161,7 @@ const StockAdjust = () => {
               <Form.Item name="reason" label="Reason" className="col-span-3">
                 <Select>
                   <Option value="Over Stock">Over Stock</Option>
-                  <Option value="Less Stock">Less Stock</Option>
+                  <Option value="Stock Short">Stock Short</Option>
                 </Select>
               </Form.Item>
 
