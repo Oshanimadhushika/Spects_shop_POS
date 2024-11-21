@@ -198,7 +198,7 @@ const PrescriptionInvoice = () => {
         <div className="grid grid-cols-12 gap-2 mb-4">
           <div className="col-span-2 p-2 border-2 border-gray-200 rounded-lg">
             <Form.Item name="regNo" label="Reg No:" className="mb-2">
-              <AntdInput className="h-10" readOnly />
+              <AntdInput className="h-10 font-bold text-center text-md" readOnly />
             </Form.Item>
             <Form.Item name="searchRegNo">
               <div className="flex items-center">
