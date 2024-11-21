@@ -14,8 +14,6 @@ const Branch = () => {
   const { fetchData: fetchId, fetchAction: fetchIdAction } = useFetch();
   const [nextId, setNextId] = useState(1);
 
-
-
   // console.log("success or false", fetchData?.status);
   // console.log("fetch data", fetchData);
 
@@ -53,7 +51,6 @@ const Branch = () => {
     }
   }, [fetchId]);
 
-
   const Addbranch = (values) => {
     setLoading(true);
     const data = {
@@ -66,10 +63,7 @@ const Branch = () => {
     fetchAction({
       query: `v1.0/branch/add`,
       body: data,
-      // method: "get",
     });
-
-    // console.log("fetchDAta", fetchData);
 
     setLoading(false);
   };
@@ -77,21 +71,16 @@ const Branch = () => {
   useEffect(() => {
     if (fetchData) {
       if (fetchData.success === true) {
-       
-
-        notifySuccess("", fetchData?.status); 
-                // message.success(fetchData?.status);
+        notifySuccess("", fetchData?.status);
         form.resetFields();
-
+        fetchnextID();
       } else {
         notifyError(fetchData.data);
       }
     }
   }, [fetchData, fetchError]);
 
- 
   return (
-    // <div className="flex items-center justify-center w-full p-3 bg-black rounded-xl">
     <div className="w-full flex items-center justify-center p-4 ">
       <div className="grid grid-cols-12 w-2/3 gap-4   bg-white rounded-xl shadow-xl p-4">
         {/* Image Section */}

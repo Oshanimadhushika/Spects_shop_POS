@@ -11,6 +11,7 @@ import {
   Typography,
 } from "antd";
 import { SearchOutlined, FileDoneOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 // import 'antd/dist/reset.css'; // Import Ant Design styles
 // import './index.css'; // Import Tailwind CSS
 
@@ -22,6 +23,8 @@ const Invoice = () => {
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [payType, setPayType] = useState("");
+  const navigate = useNavigate();
+
 
   const handleAddItem = () => {
     // Logic to add item
@@ -233,6 +236,9 @@ const Invoice = () => {
               className="bg-blue-600 text-white w-full"
               htmlType="submit"
               name="submit"
+              onClick={() => {
+                navigate("/custom-register");
+              }}
             >
               Patient Register
             </Button>

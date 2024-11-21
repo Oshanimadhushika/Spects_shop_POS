@@ -9,9 +9,13 @@ import {
   Space,
   Typography,
 } from "antd";
-// import "antd/dist/reset.css"; 
+// import "antd/dist/reset.css";
 // import "tailwindcss/tailwind.css";
 import { useNavigate } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
+import useNotification from "../hooks/useNotification";
+import moment from "moment";
+import dayjs from "dayjs";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -22,6 +26,10 @@ const Prescription = () => {
   const [assessment, setAssessment] = useState({});
   const [prescription, setPrescription] = useState({});
   const navigate = useNavigate();
+  const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
+
+
+
 
   useEffect(() => {
     // Simulate fetching data
@@ -43,16 +51,65 @@ const Prescription = () => {
     fetchInitialData();
   }, []);
 
-  const handleSave = async (values) => {
-    // Handle form save logic
-    // try {
-    //   // Call API to save assessment and prescription data
-    //   // Simulating successful save
-    //   notification.success({ message: 'Saved Successfully!' });
-    // } catch (error) {
-    //   notification.error({ message: 'Something went wrong!' });
-    // }
+  const handleSave = (values) => {
+    // setLoading(true);
+  
+    const data = {
+      // id: nextId,
+      // name: values.category,
+      branchUserId: values.branchUserId,
+      rdate: values.rdate,
+      code: values.code,
+      name: values.name,
+      billDate: values.billDate,
+      age: values.age,
+      ws: values.ws,
+      reDate: values.reDate,
+      reR: values.reR,
+      reL: values.reL,
+      reRAdd: values.reRAdd,
+      reLAdd: values.reLAdd,
+      cyR: values.cyR,
+      cyL: values.cyL,
+      cyRAdd: values.cyRAdd,
+      cyLAdd: values.cyLAdd,
+      axR: values.axR,
+      axL: values.axL,
+      axRAdd: values.axRAdd,
+      axLAdd: values.axLAdd,
+      note2: values.note2,
+      tested: values.tested,
+      var: values.var,
+      val: values.val,
+      pd: values.pd,
+      sh: values.sh,
+      nvDate: values.nvDate,
+      nv: values.nv,
+      hmr: values.hmr,
+      hml: values.hml,
+      phr: values.phr,
+      phl: values.phl,
+      suBr: values.suBr,
+      suBl: values.suBl,
+      loLr: values.loLr,
+      loll: values.loll,
+      varp: values.varp,
+      valp: values.valp,
+      tcdate: values.tcdate,
+      dpd: values.dpd,
+      mpDr: values.mpDr,
+      mpDl: values.mpDl,
+    };
+  
+    fetchAction({
+      query: `v1.0/prescription/add`,
+      body: data,
+      // method: "POST",
+    });
+  
+    // setLoading(false);
   };
+  
 
   const handleCreateJob = async () => {
     // Handle create job logic
@@ -69,6 +126,196 @@ const Prescription = () => {
     form.resetFields();
     notification.info({ message: "Form cleared!" });
   };
+
+  const distaOptions = [
+    "Plano",
+    "Own",
+    "+0.25",
+    "+0.50",
+    "+0.75",
+    "+1.00",
+    "+1.25",
+    "+1.5",
+    "+1.75",
+    "+2",
+    "+2.25",
+    "+2.5",
+    "+2.75",
+    "+3",
+    "+3.25",
+    "+3.5",
+    "+3.75",
+    "+4",
+    "+4.25",
+    "+4.5",
+    "+4.75",
+    "+5",
+    "+5.25",
+    "+5.5",
+    "+5.75",
+    "+6",
+    "+6.25",
+    "+6.5",
+    "+6.75",
+    "+7",
+    "+7.25",
+    "+7.5",
+    "+7.75",
+    "+8",
+    "+8.25",
+    "+8.5",
+    "+8.75",
+    "+9",
+    "+9.25",
+    "+9.5",
+    "+9.75",
+    "+10",
+    "+10.25",
+    "+10.5",
+    "+10.75",
+    "+11",
+    "+11.25",
+    "+11.5",
+    "+11.75",
+    "+12",
+    "+12.25",
+    "+12.5",
+    "+12.75",
+    "+13",
+    "-0.25",
+    "-0.5",
+    "-0.75",
+    "-1",
+    "-1.25",
+    "-1.5",
+    "-1.75",
+    "-2",
+    "-2.25",
+    "-2.5",
+    "-2.75",
+    "-3",
+    "-3.25",
+    "-3.5",
+    "-3.75",
+    "-4",
+    "-4.25",
+    "-4.5",
+    "-4.75",
+    "-5",
+    "-5.25",
+    "-5.5",
+    "-5.75",
+    "-6",
+    "-6.25",
+    "-6.5",
+    "-6.75",
+    "-7",
+    "-7.25",
+    "-7.5",
+    "-7.75",
+    "-8",
+    "-8.25",
+    "-8.5",
+    "-8.75",
+    "-9",
+    "-9.25",
+    "-9.5",
+    "-9.75",
+    "-10",
+    "-10.25",
+    "-10.5",
+    "-10.75",
+    "-11",
+    "-11.25",
+    "-11.5",
+    "-11.75",
+    "-12",
+    "-12.25",
+    "-12.5",
+    "-12.75",
+    "-13",
+    "-13.25",
+    "-13.5",
+    "-13.75",
+    "-14",
+    "-14.25",
+    "-14.5",
+    "-14.75",
+    "-15",
+    "-15.25",
+    "-15.5",
+    "-15.75",
+    "-16",
+    "-16.25",
+    "-16.5",
+    "-16.75",
+    "-17",
+    "-17.25",
+    "-17.5",
+    "-17.75",
+    "-18",
+    "-18.25",
+    "-18.5",
+    "-18.75",
+    "-19",
+    "-19.25",
+    "-19.5",
+    "-19.75",
+    "-20",
+  ];
+
+  const addOptions = [
+    "+1.00",
+    "+1.25",
+    "+1.50",
+    "+1.75",
+    "+2.00",
+    "+2.25",
+    "+2.50",
+    "+2.75",
+    "+3.00",
+    "+3.50",
+    "+4.00",
+  ];
+
+  const cylOptions = [
+    "+0.25",
+    "+0.50",
+    "+0.75",
+    "+1.00",
+    "+1.25",
+    "+1.50",
+    "+1.75",
+    "+2.00",
+    "+2.25",
+    "+2.50",
+    "+2.75",
+    "+3.00",
+    "+3.50",
+    "+4.00",
+    "+4.50",
+    "+5.00",
+    "+5.50",
+    "+6.00",
+    "-0.25",
+    "-0.50",
+    "-0.75",
+    "-1.00",
+    "-1.25",
+    "-1.50",
+    "-1.75",
+    "-2.00",
+    "-2.25",
+    "-2.50",
+    "-2.75",
+    "-3.00",
+    "-3.50",
+    "-4.00",
+    "-4.50",
+    "-5.00",
+    "-5.50",
+    "-6.00",
+  ];
 
   return (
     <div className="border-2 border-gray-300 bg-gray-200 p-4 mb-4 shadow-xl">
@@ -117,19 +364,19 @@ const Prescription = () => {
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="P/H" name="rightVA" className="mb-0">
+                <Form.Item label="P/H" name="rightPH" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="H/M" name="rightVA" className="mb-0">
+                <Form.Item label="H/M" name="rightHM" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="IOL" name="rightVA" className="mb-0">
+                <Form.Item label="IOL" name="rightIOL" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="Sub" name="rightVA" className="mb-0">
+                <Form.Item label="Sub" name="rightSub" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
                 {/* Add more fields as necessary */}
@@ -140,19 +387,19 @@ const Prescription = () => {
                   <Input value={assessment.leftVa} />
                 </Form.Item>
 
-                <Form.Item label="P/H" name="rightVA" className="mb-0">
+                <Form.Item label="P/H" name="leftPH" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="H/M" name="rightVA" className="mb-0">
+                <Form.Item label="H/M" name="leftHM" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="IOL" name="rightVA" className="mb-0">
+                <Form.Item label="IOL" name="leftIOL" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
 
-                <Form.Item label="Sub" name="rightVA" className="mb-0">
+                <Form.Item label="Sub" name="leftSub" className="mb-0">
                   <Input value={assessment.rightVa} />
                 </Form.Item>
                 {/* Add more fields as necessary */}
@@ -188,9 +435,11 @@ const Prescription = () => {
                     name="rightDista"
                     id="rightDista"
                   >
-                    <Option value="100">100</Option>
-                    <Option value="200">200</Option>
-                    <Option value="300">300</Option>
+                    {distaOptions.map((dista, index) => (
+                      <Select.Option key={index} value={dista}>
+                        {dista}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </div>
                 <div className="flex mt-2 gap-1">
@@ -202,9 +451,11 @@ const Prescription = () => {
                     name="rightAdd"
                     id="rightAdd"
                   >
-                    <Option value="100">100</Option>
-                    <Option value="200">200</Option>
-                    <Option value="300">300</Option>
+                    {addOptions.map((add, index) => (
+                      <Select.Option key={index} value={add}>
+                        {add}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </div>
                 <div className="flex mt-2 gap-1">
@@ -254,9 +505,11 @@ const Prescription = () => {
                     name="rightCyl"
                     id="rightCyl"
                   >
-                    <Option value="100">100</Option>
-                    <Option value="200">200</Option>
-                    <Option value="300">300</Option>
+                    {cylOptions.map((cyl, index) => (
+                      <Select.Option key={index} value={cyl}>
+                        {cyl}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </div>
               </div>
@@ -278,7 +531,7 @@ const Prescription = () => {
                   LE Sph
                 </label>
                 <div className="mt-2">
-                  <Select
+                  {/* <Select
                     className="form-select h-6 w-full"
                     name="leftDista"
                     id="leftDista"
@@ -286,10 +539,21 @@ const Prescription = () => {
                     <Option value="100">100</Option>
                     <Option value="200">200</Option>
                     <Option value="300">300</Option>
+                  </Select> */}
+                  <Select
+                    className="form-select h-6 w-full"
+                    name="leftDista"
+                    id="leftDista"
+                  >
+                    {distaOptions.map((dista, index) => (
+                      <Select.Option key={index} value={dista}>
+                        {dista}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </div>
                 <div className="mt-2">
-                  <Select
+                  {/* <Select
                     className="form-select h-6 w-full"
                     name="leftAdd"
                     id="leftAdd"
@@ -297,6 +561,18 @@ const Prescription = () => {
                     <Option value="100">100</Option>
                     <Option value="200">200</Option>
                     <Option value="300">300</Option>
+                  </Select> */}
+
+                  <Select
+                    className="form-select h-6 w-full"
+                    name="leftAdd"
+                    id="leftAdd"
+                  >
+                    {addOptions.map((add, index) => (
+                      <Select.Option key={index} value={add}>
+                        {add}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </div>
                 <div className="mt-2">
@@ -333,7 +609,7 @@ const Prescription = () => {
               <div className="col-span-2 ">
                 <label className="text-xs text-green-700 font-bold">Cyl</label>
                 <div>
-                  <Select
+                  {/* <Select
                     className="form-select h-6 w-full"
                     name="leftCyl"
                     id="leftCyl"
@@ -341,6 +617,17 @@ const Prescription = () => {
                     <Option value="100">100</Option>
                     <Option value="200">200</Option>
                     <Option value="300">300</Option>
+                  </Select> */}
+                  <Select
+                    className="form-select h-6 w-full"
+                    name="leftCyl"
+                    id="leftCyl"
+                  >
+                    {cylOptions.map((cyl, index) => (
+                      <Select.Option key={index} value={cyl}>
+                        {cyl}
+                      </Select.Option>
+                    ))}
                   </Select>
                 </div>
               </div>
@@ -409,10 +696,13 @@ const Prescription = () => {
         </div>
 
         <Space size="middle">
-          <Button type="primary" htmlType="submit" className="w-32"
-         onClick={() => {
-          navigate("/custom-register");
-        }}
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="w-32"
+            onClick={() => {
+              navigate("/custom-register");
+            }}
           >
             Patient Register
           </Button>
@@ -429,7 +719,11 @@ const Prescription = () => {
           >
             Clear
           </Button>
-          <Button type="default" htmlType="submit" className="w-32 text-red-500 border-2 border-red-500">
+          <Button
+            type="default"
+            htmlType="submit"
+            className="w-32 text-red-500 border-2 border-red-500"
+          >
             Delete
           </Button>
         </Space>
