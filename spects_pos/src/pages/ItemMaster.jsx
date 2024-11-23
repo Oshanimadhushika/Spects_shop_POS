@@ -50,13 +50,14 @@ const ItemMaster = () => {
   const [loading, setLoading] = useState(false);
   const { notifyError, notifySuccess } = useNotification();
   const [itemData, setItemData] = useState(null);
-  const { branches, departments, categories, suppliers} = useContext(DataContext);
+  const { branches, departments, categories, suppliers } =
+    useContext(DataContext);
 
   useEffect(() => {
     handleSearch({ keyword: "" });
   }, []);
 
-  // search item
+  // search item ----------------------
   const handleSearch = async (values) => {
     const searchKey = values.keyword ? values.keyword : "";
 
@@ -80,12 +81,60 @@ const ItemMaster = () => {
       if (fetchSearchData.success === true) {
         setItemData(fetchSearchData.itemList);
         // console.log("item dta",itemData);
-        
       } else {
-        notifyError(fetchSearchData.data);
+        notifyError("Error...!");
       }
     }
   }, [fetchSearchData, fetchSearchError]);
+
+  const columns = [
+    { title: "Code", dataIndex: "itemCode", key: "itemCode" },
+    { title: "BarCode", dataIndex: "barcode", key: "barcode" },
+    { title: "Description", dataIndex: "description", key: "description" },
+    {
+      title: "Department",
+      dataIndex: ["department", "departmentName"],
+      key: "department",
+    },
+    { title: "Category", dataIndex: "category", key: "category" },
+    {
+      title: "Supplier",
+      dataIndex: ["supplierList", "supName"],
+      key: "supplier",
+    },
+    { title: "Cost", dataIndex: "cost", key: "cost" },
+    { title: "Profit", dataIndex: "profit", key: "profit" },
+    { title: "Sales Price", dataIndex: "salePrice", key: "salesPrice" },
+    { title: "Discount Rs", dataIndex: "discount", key: "discount" },
+    { title: "Wholesale", dataIndex: "wholesalePrice", key: "wholesale" },
+    { title: "Location", dataIndex: "location", key: "location" },
+  ];
+
+  const onRowClick = (record) => {
+    form.setFieldsValue({
+      itemCode: record.itemCode,
+      barcode: record.barcode,
+      description: record.description,
+      category: record.category,
+      departmentId: record.department,
+      supplierId: record.supplier,
+      cost: record.cost,
+      profit: record.profit,
+      salesPrice: record.salePrice,
+      discountRs: record.discount,
+      wholesale: record.wholesalePrice,
+      location: record.location,
+    });
+    setSelectedItem(record);
+  };
+
+  const handleInputChange = (e) => {
+    const keyword = e.target.value;
+
+    handleSearch({ keyword });
+    // fetchnextID();
+  };
+  // ======================================
 
   // save item
   const handleSubmit = async (values) => {
@@ -93,7 +142,7 @@ const ItemMaster = () => {
       itemCode: values.itemCode,
       barcode: values.barcode,
       description: values.description,
-      branch:2,
+      branch: 2,
       category: values.category,
       departmentId: values.department,
       supplierId: values.supplier,
@@ -134,7 +183,7 @@ const ItemMaster = () => {
       itemCode: values.itemCode,
       barcode: values.barcode,
       description: values.description,
-      branch:2,
+      branch: 2,
       category: values.category,
       departmentId: values.department,
       supplierId: values.supplier,
@@ -169,82 +218,34 @@ const ItemMaster = () => {
     }
   }, [fetchUpdateData, fetchError]);
 
-    // delete item
-    const handleDelete = async (values) => {
-      // setLoading(true);
-      // const data = {
-      //   id: values.id,
-      // };
-  
-      // fetchDelete({
-      //   query: `v1.0/category/add`,
-      //   body: data,
-      //   // method: "get",
-      // });
-  
-      // setLoading(false);
-    };
-  
-    // useEffect(() => {
-  
-    //   if (fetchDeleteData) {
-    //     if (fetchDeleteData.status === true) {
-    //       notifySuccess(fetchDeleteData.message);
-    //       form.resetFields();
-    //       fetchnextID();
-    //     } else {
-    //       notifyError(fetchData.message);
-    //     }
-    //   }
-    // }, [fetchData, fetchError]);
-  
-  
-    
-    // search
-    
-
-  const columns = [
-    { title: "Code", dataIndex: "itemCode", key: "itemCode" },
-    { title: "BarCode", dataIndex: "barcode", key: "barcode" },
-    { title: "Description", dataIndex: "description", key: "description" },
-    { title: "Department", dataIndex: ["department", "departmentName"], key: "department" }, 
-    { title: "Category", dataIndex: "category", key: "category" },
-    { title: "Supplier", dataIndex: ["supplierList",  "supName"], key: "supplier" },
-    { title: "Cost", dataIndex: "cost", key: "cost" },
-    { title: "Profit", dataIndex: "profit", key: "profit" },
-    { title: "Sales Price", dataIndex: "salePrice", key: "salesPrice" }, 
-    { title: "Discount Rs", dataIndex: "discount", key: "discount" },
-    { title: "Wholesale", dataIndex: "wholesalePrice", key: "wholesale" }, 
-    { title: "Location", dataIndex: "location", key: "location" },
-  
-  ];
-  
-
-  const onRowClick = (record) => {
-    form.setFieldsValue({
-      itemCode: record.itemCode,
-      barcode: record.barcode,
-      description: record.description,
-      category: record.category,
-      departmentId: record.department,
-      supplierId: record.supplier,
-      cost: record.cost,
-      profit: record.profit,
-      salesPrice: record.salePrice,
-      discountRs: record.discount,
-      wholesale: record.wholesalePrice,
-      location: record.location,
-    });
-    setSelectedItem(record);
+  // delete item
+  const handleDelete = async (values) => {
+    // setLoading(true);
+    // const data = {
+    //   id: values.id,
+    // };
+    // fetchDelete({
+    //   query: `v1.0/category/add`,
+    //   body: data,
+    //   // method: "get",
+    // });
+    // setLoading(false);
   };
 
-  const handleInputChange = (e) => {
-    const keyword = e.target.value;
+  // useEffect(() => {
 
-    handleSearch({ keyword });
-    // fetchnextID();
-  };
+  //   if (fetchDeleteData) {
+  //     if (fetchDeleteData.status === true) {
+  //       notifySuccess(fetchDeleteData.message);
+  //       form.resetFields();
+  //       fetchnextID();
+  //     } else {
+  //       notifyError(fetchData.message);
+  //     }
+  //   }
+  // }, [fetchData, fetchError]);
 
+  // search
 
   return (
     <div className="bg-white  p-4 w-full max-h-full ">
@@ -506,10 +507,9 @@ const ItemMaster = () => {
           onRow={(record) => ({
             onClick: () => onRowClick(record),
           })}
-          pagination={false} 
-          scroll={{ x: 'max-content', y: '100%' }}        />
-
-      
+          pagination={false}
+          scroll={{ x: "max-content", y: "100%" }}
+        />
       </div>
     </div>
   );
