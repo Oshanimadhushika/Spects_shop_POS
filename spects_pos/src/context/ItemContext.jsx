@@ -18,11 +18,11 @@ export const ItemContextProvider = ({ children }) => {
   } = useFetch();
 
   useEffect(() => {
-    handleSearch({ keyword: "" });
+    handleSearchItem({ keyword: "" });
   }, []);
 
   // search item
-  const handleSearch = async (values) => {
+  const handleSearchItem = async (values) => {
     const searchKey = values.keyword ? values.keyword : "";
 
     const data = {
@@ -76,7 +76,7 @@ export const ItemContextProvider = ({ children }) => {
   const contextValue = {
     itemData,
     setItemData,
-    handleSearch,
+    handleSearchItem,
     isItemTableVisible,
    setIsItemTableVisible,
    selectedItem,

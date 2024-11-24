@@ -86,6 +86,15 @@ const Login = () => {
     if (fetchData) {
       if (fetchData.success === true) {
         notifySuccess("", fetchData?.status);
+
+        const loggedData = {
+          username: fetchData.userName, 
+          branchName: selectedBranchName,
+          branchId: selectedBranch,
+        };
+        localStorage.setItem("loggedData", JSON.stringify(loggedData));
+
+
         form.resetFields();
         navigate("/dashboard");
       } else {

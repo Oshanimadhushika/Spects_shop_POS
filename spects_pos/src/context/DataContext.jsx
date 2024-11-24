@@ -66,10 +66,10 @@ export const DataProvider = ({ children }) => {
     setLoading(false);
   };
 
-  console.log(branches);
-  console.log(departments);
-  console.log(categories);
-  console.log(suppliers);
+  // console.log(branches);
+  // console.log(departments);
+  // console.log(categories);
+  // console.log(suppliers);
 
   
 
