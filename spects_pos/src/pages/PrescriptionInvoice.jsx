@@ -1672,7 +1672,7 @@ const PrescriptionInvoice = () => {
     setSelectedItem,
   } = useContext(ItemContext);
 
-  const { brands, coatings, designs, lensTypes } = useContext(SettingContext);
+  const { brands, coatings, designs, lensTypes ,tints } = useContext(SettingContext);
   const [isPayVisible, setIsPayVisible] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
 
@@ -1808,12 +1808,14 @@ const PrescriptionInvoice = () => {
                 <Form.Item className="col-span-2" label="Pres Date" name="date">
                   <DatePicker className="w-full" />
                 </Form.Item>
-                <div className="col-span-2 flex items-center">
+                <div className="col-span-2 flex items-center justify-center">
                   <span className="text-sm font-semibold whitespace-nowrap">
                     Job No:
                   </span>
-                  <div className="border-2 border-gray-200 p-2 ml-2 w-full text-center text-lg font-bold text-red-700">
+                  <div className="border-2 border-gray-200 p-2 ml-2 w-full text-center text-2xl font-bold text-red-700 items-center">
                     {jobNumber}
+                    {/* <p className="font-bold text-center text-red-600 text-2xl border border-gray-400 p-2 rounded-full"> {jobNumber}</p> */}
+
                   </div>
                 </div>
                 <div className="col-span-2 flex items-center">
@@ -2273,7 +2275,7 @@ const PrescriptionInvoice = () => {
                     <Select placeholder="Lens Type">
                       {lensTypes.map((value) => (
                         <Option key={value.id} value={value.id}>
-                          {value.branchName}
+                          {value.type}
                         </Option>
                       ))}
                     </Select>
@@ -2293,7 +2295,7 @@ const PrescriptionInvoice = () => {
                     <Select placeholder="Coating">
                       {coatings.map((value) => (
                         <Option key={value.id} value={value.id}>
-                          {value.brandName}
+                          {value.coatingName}
                         </Option>
                       ))}
                     </Select>{" "}
@@ -2301,25 +2303,25 @@ const PrescriptionInvoice = () => {
 
                   <Form.Item label="Tint" className="col-span-2">
                     <Select placeholder="Tint">
-                      {/* {tints.map((value) => (
+                      {tints.map((value) => (
                       <Option key={value.id} value={value.id}>
-                        {value.brandName}
+                        {value.tintType}
                       </Option>
-                    ))} */}
-                    </Select>{" "}
+                    ))}
+                    </Select>
                   </Form.Item>
 
                   <Form.Item label="Design" className="col-span-2">
                     <Select placeholder="Design">
                       {designs.map((value) => (
                         <Option key={value.id} value={value.id}>
-                          {value.brandName}
+                          {value.designType}
                         </Option>
                       ))}
                     </Select>{" "}
                   </Form.Item>
 
-                  <Form.Item className="col-span-2 ">
+                  {/* <Form.Item className="col-span-2 ">
                     <Button
                       type="default"
                       className="w-full bg-yellow-400"
@@ -2329,9 +2331,9 @@ const PrescriptionInvoice = () => {
                     >
                       Clear
                     </Button>
-                  </Form.Item>
+                  </Form.Item> */}
 
-                  <Form.Item className="col-span-2">
+                  <Form.Item className="col-span-3">
                     <Button
                       type="primary"
                       className="w-full"
@@ -2690,10 +2692,12 @@ const PrescriptionInvoice = () => {
 
           <div className="col-span-2 p-2 border-2 border-gray-200 rounded-lg">
             <Form.Item name="jobNo">
-              <AntdInput
+              {/* <AntdInput
                 className="h-10 text-green-600 font-bold"
-                value={3000}
-              />
+                value= {jobNumber}
+              /> */}
+
+              <p className="font-bold text-center text-red-600 text-4xl border border-gray-400 p-2"> {jobNumber}</p>
             </Form.Item>
             <Form.Item name="officer">
               <label className="font-bold text-xs">Officer</label>

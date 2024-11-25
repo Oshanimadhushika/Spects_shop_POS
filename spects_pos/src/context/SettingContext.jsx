@@ -9,6 +9,8 @@ export const SettingContextProvider = ({ children }) => {
   const [coatings, setCoatings] = useState([]);
   const [designs, setDesigns] = useState([]);
   const [lensTypes, setLensTypes] = useState([]);
+  const [tints, setTints] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   // Fetch hooks
@@ -36,12 +38,19 @@ export const SettingContextProvider = ({ children }) => {
     fetchError: fetchLensTypeError,
   } = useFetch();
 
+  const {
+    fetchData: fetchTintData,
+    fetchAction: fetchTintAction,
+    fetchError: fetchTintError,
+  } = useFetch();
+
   // Fetch data on component mount
   useEffect(() => {
     getBrands();
     getCoatings();
     getDesigns();
     getLensTypes();
+    getTints();
   }, []);
 
   const getBrands = () => {
@@ -68,22 +77,30 @@ export const SettingContextProvider = ({ children }) => {
     setLoading(false);
   };
 
-  console.log(brands);
-  console.log(coatings);
-  console.log(designs);
-  console.log(lensTypes);
+  const getTints = () => {
+    setLoading(true);
+    fetchTintAction({ query: `v1.0/settings/tint`, method: "get" });
+    setLoading(false);
+  };
 
-  // Set state when data is successfully fetched
+  // console.log(brands);
+  // console.log(coatings);
+  // console.log(designs);
+  // console.log(lensTypes);
+
   useEffect(() => {
     if (fetchBrandData?.success) setBrands(fetchBrandData.list);
     if (fetchCoatingData?.success) setCoatings(fetchCoatingData.list);
     if (fetchDesignData?.success) setDesigns(fetchDesignData.list);
     if (fetchLensTypeData?.success) setLensTypes(fetchLensTypeData.list);
+    if (fetchTintData?.success) setTints(fetchTintData.list);
+
   }, [
     fetchBrandData,
     fetchCoatingData,
     fetchDesignData,
     fetchLensTypeData,
+    fetchTintData,
   ]);
 
   const contextValue = {
@@ -91,12 +108,14 @@ export const SettingContextProvider = ({ children }) => {
     coatings,
     designs,
     lensTypes,
+    tints,
     loading,
     errors: {
       fetchBrandError,
       fetchCoatingError,
       fetchDesignError,
       fetchLensTypeError,
+      fetchTintError,
     },
   };
 
