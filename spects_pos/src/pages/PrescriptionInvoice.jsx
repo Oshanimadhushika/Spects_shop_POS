@@ -251,7 +251,7 @@ const PrescriptionInvoice = () => {
       code: selectedCustomer.loyaltyBarCode,
       name: selectedCustomer.regNoname,
       billDate: values.presdate,
-      age: values.age,
+      age: selectedCustomer.age,
       ws: values.ws,
       reDate: values.reDate,
       reR: values.reR,
@@ -266,22 +266,26 @@ const PrescriptionInvoice = () => {
       axL: values.axL,
       axRAdd: values.axRAdd,
       axLAdd: values.axLAdd,
-      note2: values.note,
       tested: values.tested,
-      var: values.var,
-      val: values.val,
+
+      // prescription
+      var: values.rightVA,
+      val: values.leftVA,
+      hmr: values.rightHM,
+      hml: values.leftHM,
+      phr: values.rightPH,
+      phl: values.leftPH,
+      suBr: values.rightSub,
+      suBl: values.leftSub,
+      loLr: values.rightIOL,
+      loll: values.leftIOL,
+      note2: values.note,
+
+
       pd: values.pd,
       sh: values.sh,
       nvDate: values.nvDate,
       nv: values.nv,
-      hmr: values.hmr,
-      hml: values.hml,
-      phr: values.phr,
-      phl: values.phl,
-      suBr: values.suBr,
-      suBl: values.suBl,
-      loLr: values.loLr,
-      loll: values.loll,
       varp: values.varp,
       valp: values.valp,
       tcdate:values.dueDate,
@@ -293,7 +297,6 @@ const PrescriptionInvoice = () => {
     fetchAction({
       query: `v1.0/prescription/add`,
       body: data,
-      // method: "POST",
     });
 
     // setLoading(false);
@@ -718,7 +721,6 @@ const PrescriptionInvoice = () => {
                       <Form.Item label="Sub" name="rightSub" className="mb-0">
                         <Input value={assessment.rightVa} />
                       </Form.Item>
-                      {/* Add more fields as necessary */}
                     </div>
                     <div>
                       <div className="text-xs text-green-700 font-bold">
