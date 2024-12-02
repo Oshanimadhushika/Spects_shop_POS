@@ -69,7 +69,7 @@ const PrescriptionInvoice = () => {
 
   const handleOfficerChange = (value) => {
     setSelectedOfficer(value);
-    console.log("Selected Officer ID:", value);
+    // console.log("Selected Officer ID:", value);
   };
 
   // search patient
@@ -117,16 +117,10 @@ const PrescriptionInvoice = () => {
     setSelectedCustomer(record);
     setIsModalVisible(false);
 
-    // console.log("regno ", record?.regNo);
-    // console.log("record ", record);
-
     handleJobHistory(record.regNo);
   };
 
-  // useEffect(() => {
-  //   console.log("Updated selectedCustomer: ", selectedCustomer);
-  // }, [selectedCustomer]);
-
+  // search input change
   const handleInputChange = (e) => {
     const keyword = e.target.value;
 
@@ -146,7 +140,7 @@ const PrescriptionInvoice = () => {
       dataIndex: "dateTime",
       key: "dateTime",
       render: (date) => {
-        return moment.isMoment(date) ? date.format("YYYY-MM-DD") : "N/A";
+        return date ? moment(date).format("YYYY-MM-DD") : "N/A";
       },
     },
     { title: "Location", dataIndex: "location", key: "location" },
@@ -167,12 +161,8 @@ const PrescriptionInvoice = () => {
     setSelectedOption(e.target.value);
   };
 
-  // search customer
+  // get customer history
   const handleJobHistory = async (cusId) => {
-    // console.log("selected cus 2 ",selectedCustomer);
-
-    // console.log("selected cus id",selectedCustomer.regNo);
-
     const data = {
       customer: cusId,
     };
@@ -188,6 +178,7 @@ const PrescriptionInvoice = () => {
     if (fetchJobHistoryData) {
       if (fetchJobHistoryData?.success === true) {
         setHistory(fetchJobHistoryData.list);
+        //console.log("cus histoty", history);
       } else {
         notifyError("Error Fetching Data..!");
       }
@@ -197,21 +188,32 @@ const PrescriptionInvoice = () => {
   const columns = [
     {
       title: "Job ID",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "jobNo",
+      key: "jobNo",
+      width: 200,
       // onClick: handleRowClick,
     },
     {
       title: "Date",
-      dataIndex: "date",
-      key: "date",
+      dataIndex: "rdate",
+      key: "rdate",
+      render: (date) => {
+        return date ? moment(date).format("YYYY-MM-DD") : "N/A";
+      },
+    },
+  ];
+
+  const defaultData = [
+    {
+      jobNo: jobNumber,
+      rdate: moment().format("YYYY-MM-DD"),
     },
   ];
 
   // prescription
   const [formPres] = Form.useForm();
   const [assessment, setAssessment] = useState({});
-  const [prescription, setPrescription] = useState({});
+  // const [prescription, setPrescription] = useState({});
   const navigate = useNavigate();
   const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
   const {
@@ -252,6 +254,7 @@ const PrescriptionInvoice = () => {
       name: selectedCustomer.regNoname,
       billDate: values.presdate,
       age: selectedCustomer.age,
+
       ws: values.ws,
       reDate: values.reDate,
       reR: values.reR,
@@ -281,14 +284,13 @@ const PrescriptionInvoice = () => {
       loll: values.leftIOL,
       note2: values.note,
 
-
       pd: values.pd,
       sh: values.sh,
       nvDate: values.nvDate,
       nv: values.nv,
       varp: values.varp,
       valp: values.valp,
-      tcdate:values.dueDate,
+      tcdate: values.dueDate,
       dpd: values.dpd,
       mpDr: values.mpDr,
       mpDl: values.mpDl,
@@ -769,7 +771,7 @@ const PrescriptionInvoice = () => {
                       <label className="text-xs text-green-700 font-bold">
                         RE Sph
                       </label>
-                      <div className="flex mt-2 gap-1">
+                      <Form.Item className="flex mt-2 gap-1" name="rightDista">
                         <label
                           htmlFor="rightDista"
                           className="font-semibold text-xs"
@@ -787,8 +789,8 @@ const PrescriptionInvoice = () => {
                             </Select.Option>
                           ))}
                         </Select>
-                      </div>
-                      <div className="flex mt-2 gap-1">
+                      </Form.Item>
+                      <Form.Item className="flex mt-2 gap-1" name="rightAdd">
                         <label
                           htmlFor="rightAdd"
                           className="font-semibold text-xs"
@@ -806,8 +808,8 @@ const PrescriptionInvoice = () => {
                             </Select.Option>
                           ))}
                         </Select>
-                      </div>
-                      <div className="flex mt-2 gap-1">
+                      </Form.Item>
+                      <Form.Item className="flex mt-2 gap-1" name="rightVA">
                         <label
                           htmlFor="prescriptionRightVA"
                           className="font-semibold text-xs"
@@ -817,22 +819,22 @@ const PrescriptionInvoice = () => {
                         <Input
                           type="text"
                           className="form-control h-6"
-                          id="prescriptionRightVA"
-                          name="prescriptionRightVA"
+                          id="rightVA"
+                          name="rightVA"
                         />
-                      </div>
-                      <div className="flex mt-2 gap-1">
+                      </Form.Item>
+                      <Form.Item className="flex mt-2 gap-1" name="rightNPD">
                         <label htmlFor="NPD" className="font-semibold text-xs">
                           N.PD:
                         </label>
                         <Input
                           type="text"
                           className="form-control h-6"
-                          id="NPD"
-                          name="NPD"
+                          id="rightNPD"
+                          name="rightNPD"
                         />
-                      </div>
-                      <div className="flex mt-2 gap-1">
+                      </Form.Item>
+                      <Form.Item className="flex mt-2 gap-1" name="rightMPD">
                         <label
                           htmlFor="rightMPD"
                           className="font-semibold text-xs"
@@ -845,11 +847,11 @@ const PrescriptionInvoice = () => {
                           id="rightMPD"
                           name="rightMPD"
                         />
-                      </div>
+                      </Form.Item>
                     </div>
 
                     {/* Cylinder */}
-                    <div className="col-span-2 ">
+                    <Form.Item className="col-span-2 " id="rightCyl">
                       <label className="text-xs text-green-700 font-bold">
                         Cyl
                       </label>
@@ -866,10 +868,10 @@ const PrescriptionInvoice = () => {
                           ))}
                         </Select>
                       </div>
-                    </div>
+                    </Form.Item>
 
                     {/* Axis */}
-                    <div className="col-span-2">
+                    <Form.Item className="col-span-2" name="rightAxis">
                       <label className="text-xs text-green-700 font-bold">
                         Axis
                       </label>
@@ -879,23 +881,14 @@ const PrescriptionInvoice = () => {
                         id="rightAxis"
                         name="rightAxis"
                       />
-                    </div>
+                    </Form.Item>
 
                     {/* Left Eye */}
                     <div className="col-span-2">
                       <label className="text-xs text-green-700 font-bold">
                         LE Sph
                       </label>
-                      <div className="mt-2">
-                        {/* <Select
-                          className="form-select h-6 w-full"
-                          name="leftDista"
-                          id="leftDista"
-                        >
-                          <Option value="100">100</Option>
-                          <Option value="200">200</Option>
-                          <Option value="300">300</Option>
-                        </Select> */}
+                      <Form.Item className="mt-2" name="leftDista">
                         <Select
                           className="form-select h-6 w-full"
                           name="leftDista"
@@ -907,18 +900,8 @@ const PrescriptionInvoice = () => {
                             </Select.Option>
                           ))}
                         </Select>
-                      </div>
-                      <div className="mt-2">
-                        {/* <Select
-                          className="form-select h-6 w-full"
-                          name="leftAdd"
-                          id="leftAdd"
-                        >
-                          <Option value="100">100</Option>
-                          <Option value="200">200</Option>
-                          <Option value="300">300</Option>
-                        </Select> */}
-
+                      </Form.Item>
+                      <Form.Item className="mt-2" name="leftAdd">
                         <Select
                           className="form-select h-6 w-full"
                           name="leftAdd"
@@ -930,16 +913,16 @@ const PrescriptionInvoice = () => {
                             </Select.Option>
                           ))}
                         </Select>
-                      </div>
-                      <div className="mt-2">
+                      </Form.Item>
+                      <Form.Item className="mt-2" name="leftVa">
                         <Input
                           type="text"
                           className="form-control h-6"
-                          id="prescriptionLeftVa"
-                          name="prescriptionLeftVa"
+                          id="leftVa"
+                          name="leftVa"
                         />
-                      </div>
-                      <div className="flex mt-2 gap-1">
+                      </Form.Item>
+                      <Form.Item className="flex mt-2 gap-1" name="leftDpd">
                         <label
                           htmlFor="leftDpd"
                           className="font-semibold text-xs"
@@ -952,33 +935,24 @@ const PrescriptionInvoice = () => {
                           id="leftDpd"
                           name="leftDpd"
                         />
-                      </div>
-                      <div className="mt-2">
+                      </Form.Item>
+                      <Form.Item className="mt-2" name="leftMpd">
                         <Input
                           type="text"
                           className="form-control h-6"
                           id="leftMpd"
                           name="leftMpd"
                         />
-                      </div>
+                      </Form.Item>
                     </div>
 
                     {/* Cylinder (Left Eye) */}
 
                     <div className="col-span-2 ">
-                      <label className="text-xs text-green-700 font-bold">
-                        Cyl
-                      </label>
-                      <div>
-                        {/* <Select
-                          className="form-select h-6 w-full"
-                          name="leftCyl"
-                          id="leftCyl"
-                        >
-                          <Option value="100">100</Option>
-                          <Option value="200">200</Option>
-                          <Option value="300">300</Option>
-                        </Select> */}
+                      <Form.Item name="leftCyl">
+                        <label className="text-xs text-green-700 font-bold">
+                          Cyl
+                        </label>
                         <Select
                           className="form-select h-6 w-full"
                           name="leftCyl"
@@ -990,29 +964,32 @@ const PrescriptionInvoice = () => {
                             </Select.Option>
                           ))}
                         </Select>
-                      </div>
+                      </Form.Item>
                     </div>
 
                     {/* Axis (Left Eye) */}
                     <div className="col-span-2">
-                      <label className="text-xs text-green-700 font-bold">
-                        Axis
-                      </label>
-                      <Input
-                        type="text"
-                        className="form-control h-6"
-                        id="leftAxis"
-                        name="leftAxis"
-                      />
-                      <div className="flex gap-1 mt-6">
+                      <Form.Item name="leftAxis">
+                        <label className="text-xs text-green-700 font-bold">
+                          Axis
+                        </label>
+                        <Input
+                          type="text"
+                          className="form-control h-6"
+                          id="leftAxis"
+                          name="leftAxis"
+                        />
+                      </Form.Item>
+
+                      <Form.Item className="flex gap-1 mt-6" name="leftSh">
                         <label className="text-xs font-semibold">SH</label>
                         <Input
                           type="text"
                           className="form-control h-6"
                           id="sh"
-                          name="prescriptionSh"
+                          name="leftSh"
                         />
-                      </div>
+                      </Form.Item>
                     </div>
                   </div>
                 </div>
@@ -1022,53 +999,59 @@ const PrescriptionInvoice = () => {
               Tested By
             </Typography.Title> */}
 
-                  <Form layout="vertical">
-                    {/* Tested By */}
-                    <Form.Item
-                      name="tested"
-                      label={
-                        <span className="text-xs font-medium">Tested By</span>
-                      }
-                    >
-                      <Select className="h-6" id="tested" name="tested">
+                  {/* <Form layout="vertical"> */}
+                  {/* Tested By */}
+                  <Form.Item
+                    name="tested"
+                    label={
+                      <span className="text-xs font-medium">Tested By</span>
+                    }
+                  >
+                    {/* <Select className="h-6" id="tested" name="tested">
                         <Option value="100">100</Option>
                         <Option value="200">200</Option>
                         <Option value="300">300</Option>
-                      </Select>
+                      </Select> */}
+                    <Select
+                      className="h-10"
+                      placeholder="Select Officer"
+                      onChange={handleOfficerChange}
+                      value={selectedOfficer}
+                    >
+                      {users.map((officer) => (
+                        <Option key={officer.id} value={officer.id}>
+                          {officer.userName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+
+                  <div className="flex gap-4 mt-4">
+                    {/* Next Visit */}
+                    <Form.Item
+                      name="nextvisit"
+                      label={
+                        <span className="text-xs font-medium">Next Visit</span>
+                      }
+                    >
+                      <DatePicker
+                        className="h-6"
+                        id="nextvisit"
+                        name="nvDate"
+                      />
                     </Form.Item>
 
-                    <div className="flex gap-4 mt-4">
-                      {/* Next Visit */}
-                      <Form.Item
-                        name="nextvisit"
-                        label={
-                          <span className="text-xs font-medium">
-                            Next Visit
-                          </span>
-                        }
-                      >
-                        <DatePicker
-                          className="h-6"
-                          id="nextvisit"
-                          name="nvDate"
-                        />
-                      </Form.Item>
-
-                      {/* Due Date */}
-                      <Form.Item
-                        name="dueDate"
-                        label={
-                          <span className="text-xs font-medium">Due Date</span>
-                        }
-                      >
-                        <DatePicker
-                          className="h-6"
-                          id="dueDate"
-                          name="dueDate"
-                        />
-                      </Form.Item>
-                    </div>
-                  </Form>
+                    {/* Due Date */}
+                    <Form.Item
+                      name="dueDate"
+                      label={
+                        <span className="text-xs font-medium">Due Date</span>
+                      }
+                    >
+                      <DatePicker className="h-6" id="dueDate" name="dueDate" />
+                    </Form.Item>
+                  </div>
+                  {/* </Form> */}
                 </div>
               </div>
 
@@ -1559,7 +1542,6 @@ const PrescriptionInvoice = () => {
               /> */}
 
               <p className="font-bold text-center text-red-600 text-4xl border border-gray-400 p-2">
-                {" "}
                 {jobNumber}
               </p>
             </Form.Item>
@@ -1589,8 +1571,6 @@ const PrescriptionInvoice = () => {
                 // value={officer}
               >
                 <Option value="Showroom">Showroom</Option>
-                {/* <Option value="Heshan">Heshan</Option>
-                <Option value="Janu">Janu</Option> */}
               </Select>
             </Form.Item>
           </div>
@@ -1598,8 +1578,9 @@ const PrescriptionInvoice = () => {
           <div className="flex col-span-4 gap-2 p-4">
             {/* {history.length > 0 && ( */}
             <Table
+              className="font-bold"
               columns={columns}
-              dataSource={history}
+              dataSource={history.length > 0 ? history : defaultData}
               pagination={false}
               bordered
               size="small"

@@ -82,6 +82,7 @@ const CustomerRegister = () => {
       dateTime: new Date().toISOString(),
       location: values.location,
       occupation: values.occupation || "",
+      age:values.age,
       mobileNo: values.teleMobile,
       telNoLan: values.teleLand || "",
       addressLine1: values.address1 || "",
@@ -121,6 +122,7 @@ const CustomerRegister = () => {
       regNo: values.registerNo,
       loyaltyBarCode: values.loyaltyBarcode || "",
       name: values.name,
+      age:values.age,
       dateTime: new Date().toISOString(),
       location: values.location,
       occupation: values.occupation || "",
@@ -131,6 +133,9 @@ const CustomerRegister = () => {
       addressLine3: values.address3 || "",
       area: values.area || "",
     };
+
+    console.log("data",data);
+    
 
     fetchUpdate({
       query: `v1.0/customer/update`,
@@ -240,7 +245,6 @@ const CustomerRegister = () => {
 
   // set age from DOB
   const handleDateOfBirthChange = (date) => {
-    console.log("DOB", date);
 
     if (date && dayjs.isDayjs(date)) {
       const today = dayjs();
@@ -269,8 +273,8 @@ const CustomerRegister = () => {
       dataIndex: "dateTime",
       key: "dateTime",
       render: (date) => {
-        return moment.isMoment(date) ? date.format('YYYY-MM-DD') : 'N/A';
-      }    },
+        return date ? moment(date).format('YYYY-MM-DD') : 'N/A';
+      },  },
     { title: "Location", dataIndex: "location", key: "location" },
     { title: "Occupation", dataIndex: "occupation", key: "occupation" },
     { title: "Mobile No", dataIndex: "mobileNo", key: "mobileNo" },
