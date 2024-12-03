@@ -33,6 +33,7 @@ import { useNavigate } from "react-router-dom";
 import { ItemContext } from "../context/ItemContext";
 import { SettingContext } from "../context/SettingContext";
 import { UsersInLoggedBranchContext } from "../context/UsersInLoggedBranchContext";
+import { VscLayoutPanelJustify } from "react-icons/vsc";
 
 const { Text } = Typography;
 // const { RangePicker } = DatePicker;
@@ -44,10 +45,10 @@ const PrescriptionInvoice = () => {
   const [form] = Form.useForm();
   const [selectedOption, setSelectedOption] = useState("prescription");
   const [jobNumber, setJobNumber] = useState("");
-  const [officer, setOfficer] = useState("");
-  const [customerResult, setCustomerResult] = useState({});
+  // const [officer, setOfficer] = useState("");
+  // const [customerResult, setCustomerResult] = useState({});
   const [history, setHistory] = useState([]);
-  const [dataSource, setDataSource] = useState([]);
+  // const [dataSource, setDataSource] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const {
@@ -61,11 +62,54 @@ const PrescriptionInvoice = () => {
   const { users } = useContext(UsersInLoggedBranchContext);
   const [selectedOfficer, setSelectedOfficer] = useState(null);
 
+    // prescription
+    const [formPres] = Form.useForm();
+    const [assessment, setAssessment] = useState({});
+    // const [prescription, setPrescription] = useState({});
+    const navigate = useNavigate();
+    const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
+    const {
+      fetchData: fetchNewJobNumber,
+      fetchAction: fetchNewJobNumberAction,
+      fetchError: fetchNewJobError,
+    } = useFetch();
+  
+    const [loading, setLoading] = useState(false);
+
   const {
     fetchData: fetchJobHistoryData,
     fetchAction: fetchJobHistoryAction,
     fetchError: fetchJobHistoryError,
   } = useFetch();
+
+    // invoice
+    const [formInvo] = Form.useForm();
+    const [formInvoKinds] = Form.useForm();
+  
+    const [formItem] = Form.useForm();
+  
+    // const [items, setItems] = useState([]);
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [payType, setPayType] = useState("");
+    const [searchKeyword, setSearchKeyword] = useState("");
+    const {
+      handleSearchItem,
+      isItemTableVisible,
+      setIsItemTableVisible,
+      selectedItem,
+      setSelectedItem,
+    } = useContext(ItemContext);
+  
+    const { brands, coatings, designs, lensTypes, tints } =
+      useContext(SettingContext);
+    const [isPayVisible, setIsPayVisible] = useState(false);
+    const [totalAmount, setTotalAmount] = useState(0);
+    const {
+      fetchData: fetchInvoice,
+      fetchAction: fetchInvoiceAction,
+      fetchError: fetchInvoiceError,
+    } = useFetch();
+
 
   const handleOfficerChange = (value) => {
     setSelectedOfficer(value);
@@ -210,40 +254,10 @@ const PrescriptionInvoice = () => {
     },
   ];
 
-  // prescription
-  const [formPres] = Form.useForm();
-  const [assessment, setAssessment] = useState({});
-  // const [prescription, setPrescription] = useState({});
-  const navigate = useNavigate();
-  const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
-  const {
-    fetchData: fetchNewJobNumber,
-    fetchAction: fetchNewJobNumberAction,
-    fetchError: fetchNewJobError,
-  } = useFetch();
 
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    // Simulate fetching data
-    const fetchInitialData = async () => {
-      // Simulate fetching job number
-      //   setJobNo('123456');
-      //   // Simulate fetching initial assessment and prescription data
-      //   setAssessment({
-      //     rightVa: '',
-      //     leftVa: '',
-      //     note: ''
-      //   });
-      //   setPrescription({
-      //     rightDista: '100',
-      //     leftDista: '100'
-      //   });
-    };
 
-    fetchInitialData();
-  }, []);
-
+// prescription save
   const handleSave = (values) => {
     const data = {
       branchUserId: selectedOfficer,
@@ -304,6 +318,19 @@ const PrescriptionInvoice = () => {
     // setLoading(false);
   };
 
+  useEffect(() => {
+    if (fetchData) {
+      if (fetchData.status === true) {
+        notifySuccess(fetchData.message);
+      } else {
+        notifyError(fetchData.message);
+      }
+    }
+  }, [fetchData]);
+
+
+
+
   // next job id
   const handleCreateJobNumber = async () => {
     setLoading(true);
@@ -322,7 +349,7 @@ const PrescriptionInvoice = () => {
       if (fetchNewJobNumber.status === true) {
         setJobNumber(fetchNewJobNumber.message);
       } else {
-        notifyError(fetchData.message);
+        notifyError(fetchNewJobNumber.message);
       }
     }
   }, [fetchNewJobNumber]);
@@ -517,28 +544,44 @@ const PrescriptionInvoice = () => {
     "-6.00",
   ];
 
-  // invoice
-  const [formInvo] = Form.useForm();
-  const [formInvoKinds] = Form.useForm();
+// invoice
 
-  const [formItem] = Form.useForm();
+// invoice save
+const handleSaveInvoice = (values) => {
+  const data = {
+    invoiceNo:values.invoNo,
+    localDateTime: values.invoDate,
+    lensType: values.lensTypes,
+    brand: values.brands,
+    coating: values.coatings,
+    tint: values.tints,
+    design: values.designs,
+    balance:1000.0,
+    totalAmount: totalAmount,
+    invoiceItemList: selectedItems.map((item) => ({
+      itemCode: item.code,
+      description: item.desc,
+      salePrice: item.price,
+      qty: item.qty,
+      discount: item.disc,
+      amount: item.amount,
+    })),  
+  };
 
-  const [items, setItems] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [payType, setPayType] = useState("");
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const {
-    handleSearchItem,
-    isItemTableVisible,
-    setIsItemTableVisible,
-    selectedItem,
-    setSelectedItem,
-  } = useContext(ItemContext);
+  fetchInvoiceAction({
+    query: `v1.0/invoice/add`,
+    body: data,
+  });
 
-  const { brands, coatings, designs, lensTypes, tints } =
-    useContext(SettingContext);
-  const [isPayVisible, setIsPayVisible] = useState(false);
-  const [totalAmount, setTotalAmount] = useState(0);
+  if (fetchInvoice && fetchInvoice.status === true) {
+    notifySuccess(fetchInvoice.message);
+  } else {
+    notifyError(fetchInvoice.message);
+  }
+
+  // setLoading(false);
+};
+
 
   useEffect(() => {
     if (!searchKeyword && selectedItem) {
@@ -573,6 +616,7 @@ const PrescriptionInvoice = () => {
     handleSearchItem({ keyword: searchKeyword });
   };
 
+// item click
   const handleAddItem = () => {
     formItem.validateFields().then((values) => {
       const newItem = {
@@ -597,16 +641,19 @@ const PrescriptionInvoice = () => {
     });
   };
 
+  // delete added item row
   const handleDeleteRow = (key) => {
     const updatedItems = selectedItems.filter((item) => item.key !== key);
     setSelectedItems(updatedItems);
   };
 
+  // pay type
   const handlePaymentTypeChange = (e) => {
     setPayType(e.target.value);
     setIsPayVisible(true);
   };
 
+  // content
   const renderModalContent = () => {
     switch (payType) {
       case "cash":
@@ -655,7 +702,6 @@ const PrescriptionInvoice = () => {
   const renderContent = () => {
     switch (selectedOption) {
       case "prescription":
-        // return <Prescription />;
         return (
           <div className="border-2 border-gray-300 bg-gray-200 p-4 mb-4 shadow-xl">
             <Typography.Title level={3}>Prescription</Typography.Title>
@@ -1093,7 +1139,6 @@ const PrescriptionInvoice = () => {
           </div>
         );
       case "invoice":
-        // return <Invoice />;
         return (
           <div className="border-2 border-gray-300 bg-gray-200 p-4 mb-4 shadow-xl">
             {/* <h3 className="text-lg font-bold mb-4"></h3> */}
@@ -1102,21 +1147,30 @@ const PrescriptionInvoice = () => {
             <Form
               form={formInvo}
               layout="vertical"
-              onFinish={() => {
-                /* Submit logic */
-              }}
-            >
+              onFinish={(values) => {
+                const payload = {
+                  invoiceNo: values.invoNo,
+                  localDateTime: values.invoDate,
+                  lensType: values.lensTypes,
+                  brand: values.brands,
+                  coating: values.coatings,
+                  tint: values.tints,
+                  design: values.designs,
+                };
+                console.log("Submitted payload:", payload);
+                handleSaveInvoice(payload);
+              }}           >
               <Form form={formInvoKinds} layout="vertical">
                 <div className="grid grid-cols-12 gap-2 mb-4">
-                  <Form.Item label="Invoice Date" className="col-span-2">
+                  <Form.Item label="Invoice Date" className="col-span-2" name="invoDate">
                     <DatePicker className="w-full" />
                   </Form.Item>
 
-                  <Form.Item label="Invoice No" className="col-span-2">
+                  <Form.Item label="Invoice No" className="col-span-2" name="invoNo">
                     <Input className="w-full" />
                   </Form.Item>
 
-                  <Form.Item label="Lens Type" className="col-span-2">
+                  <Form.Item label="Lens Type" className="col-span-2" name="lensTypes">
                     <Select placeholder="Lens Type">
                       {lensTypes.map((value) => (
                         <Option key={value.id} value={value.id}>
@@ -1126,7 +1180,7 @@ const PrescriptionInvoice = () => {
                     </Select>
                   </Form.Item>
 
-                  <Form.Item label="Brand" className="col-span-1">
+                  <Form.Item label="Brand" className="col-span-1" name="brands">
                     <Select placeholder="Brand">
                       {brands.map((value) => (
                         <Option key={value.id} value={value.id}>
@@ -1136,7 +1190,7 @@ const PrescriptionInvoice = () => {
                     </Select>
                   </Form.Item>
 
-                  <Form.Item label="Coating" className="col-span-1">
+                  <Form.Item label="Coating" className="col-span-1" name="coatings">
                     <Select placeholder="Coating">
                       {coatings.map((value) => (
                         <Option key={value.id} value={value.id}>
@@ -1146,7 +1200,7 @@ const PrescriptionInvoice = () => {
                     </Select>{" "}
                   </Form.Item>
 
-                  <Form.Item label="Tint" className="col-span-2">
+                  <Form.Item label="Tint" className="col-span-2" name="tints">
                     <Select placeholder="Tint">
                       {tints.map((value) => (
                         <Option key={value.id} value={value.id}>
@@ -1156,7 +1210,7 @@ const PrescriptionInvoice = () => {
                     </Select>
                   </Form.Item>
 
-                  <Form.Item label="Design" className="col-span-2">
+                  <Form.Item label="Design" className="col-span-2" name="designs">
                     <Select placeholder="Design">
                       {designs.map((value) => (
                         <Option key={value.id} value={value.id}>
@@ -1178,7 +1232,7 @@ const PrescriptionInvoice = () => {
                     </Button>
                   </Form.Item> */}
 
-                  <Form.Item className="col-span-3">
+                  {/* <Form.Item className="col-span-3">
                     <Button
                       type="primary"
                       className="w-full"
@@ -1186,7 +1240,7 @@ const PrescriptionInvoice = () => {
                     >
                       Add
                     </Button>
-                  </Form.Item>
+                  </Form.Item> */}
                 </div>
               </Form>
 
@@ -1237,6 +1291,16 @@ const PrescriptionInvoice = () => {
                     className="col-span-3"
                   >
                     <Select className="w-full"></Select>
+                  </Form.Item>
+
+                  <Form.Item className="col-span-2 mt-4">
+                    <Button
+                      type="primary"
+                      className="w-full"
+                      onClick={handleAddItem}
+                    >
+                      Add Item
+                    </Button>
                   </Form.Item>
                 </div>
 
@@ -1388,11 +1452,13 @@ const PrescriptionInvoice = () => {
                     className="bg-blue-600 text-white w-full"
                     htmlType="submit"
                     name="submit"
-                    onClick={() => {
-                      navigate("/custom-register");
-                    }}
+                    // onClick={() => {
+                    //   navigate("/custom-register");
+                    // }}
+                    // onClick={handleSaveInvoice}
                   >
-                    Patient Register
+                    {/* Patient Register */}
+                    Save Invoice
                   </Button>
                   <Button
                     type="default"
@@ -1445,6 +1511,7 @@ const PrescriptionInvoice = () => {
         return null;
     }
   };
+
 
   return (
     <div className=" bg-white p-4 w-full h-screen">
