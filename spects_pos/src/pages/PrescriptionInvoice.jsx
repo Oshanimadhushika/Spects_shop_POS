@@ -62,6 +62,9 @@ const PrescriptionInvoice = () => {
   const { users } = useContext(UsersInLoggedBranchContext);
   const [selectedOfficer, setSelectedOfficer] = useState(null);
 
+  console.log("officer",users);
+  
+
     // prescription
     const [formPres] = Form.useForm();
     const [assessment, setAssessment] = useState({});

@@ -20,10 +20,7 @@ const UsersInLoggedBranchContextProvider = ({ children }) => {
   useEffect(() => {
 
     const loggedData = JSON.parse(localStorage.getItem('loggedData'));
-    // console.log("logged data",loggedData);
-    // console.log("logged branch",loggedData.branchId);
-
-
+   
     if (loggedData && loggedData.branchId) {
       const loggedBranchId = loggedData.branchId; 
       setBranchId(loggedBranchId); 
@@ -37,8 +34,6 @@ const UsersInLoggedBranchContextProvider = ({ children }) => {
         query: 'v1.0/user/',
         method: 'get', 
       });
-
-   
   };
 
 
