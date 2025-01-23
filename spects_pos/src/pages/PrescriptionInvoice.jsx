@@ -62,22 +62,21 @@ const PrescriptionInvoice = () => {
   const { users } = useContext(UsersInLoggedBranchContext);
   const [selectedOfficer, setSelectedOfficer] = useState(null);
 
-  console.log("officer",users);
-  
+  console.log("officer", users);
 
-    // prescription
-    const [formPres] = Form.useForm();
-    const [assessment, setAssessment] = useState({});
-    // const [prescription, setPrescription] = useState({});
-    const navigate = useNavigate();
-    const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
-    const {
-      fetchData: fetchNewJobNumber,
-      fetchAction: fetchNewJobNumberAction,
-      fetchError: fetchNewJobError,
-    } = useFetch();
-  
-    const [loading, setLoading] = useState(false);
+  // prescription
+  const [formPres] = Form.useForm();
+  const [assessment, setAssessment] = useState({});
+  // const [prescription, setPrescription] = useState({});
+  const navigate = useNavigate();
+  const { fetchData, fetchAction, fetchError, fetchLoading } = useFetch();
+  const {
+    fetchData: fetchNewJobNumber,
+    fetchAction: fetchNewJobNumberAction,
+    fetchError: fetchNewJobError,
+  } = useFetch();
+
+  const [loading, setLoading] = useState(false);
 
   const {
     fetchData: fetchJobHistoryData,
@@ -85,34 +84,33 @@ const PrescriptionInvoice = () => {
     fetchError: fetchJobHistoryError,
   } = useFetch();
 
-    // invoice
-    const [formInvo] = Form.useForm();
-    const [formInvoKinds] = Form.useForm();
-  
-    const [formItem] = Form.useForm();
-  
-    // const [items, setItems] = useState([]);
-    const [selectedItems, setSelectedItems] = useState([]);
-    const [payType, setPayType] = useState("");
-    const [searchKeyword, setSearchKeyword] = useState("");
-    const {
-      handleSearchItem,
-      isItemTableVisible,
-      setIsItemTableVisible,
-      selectedItem,
-      setSelectedItem,
-    } = useContext(ItemContext);
-  
-    const { brands, coatings, designs, lensTypes, tints } =
-      useContext(SettingContext);
-    const [isPayVisible, setIsPayVisible] = useState(false);
-    const [totalAmount, setTotalAmount] = useState(0);
-    const {
-      fetchData: fetchInvoice,
-      fetchAction: fetchInvoiceAction,
-      fetchError: fetchInvoiceError,
-    } = useFetch();
+  // invoice
+  const [formInvo] = Form.useForm();
+  const [formInvoKinds] = Form.useForm();
 
+  const [formItem] = Form.useForm();
+
+  // const [items, setItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [payType, setPayType] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const {
+    handleSearchItem,
+    isItemTableVisible,
+    setIsItemTableVisible,
+    selectedItem,
+    setSelectedItem,
+  } = useContext(ItemContext);
+
+  const { brands, coatings, designs, lensTypes, tints } =
+    useContext(SettingContext);
+  const [isPayVisible, setIsPayVisible] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const {
+    fetchData: fetchInvoice,
+    fetchAction: fetchInvoiceAction,
+    fetchError: fetchInvoiceError,
+  } = useFetch();
 
   const handleOfficerChange = (value) => {
     setSelectedOfficer(value);
@@ -257,10 +255,7 @@ const PrescriptionInvoice = () => {
     },
   ];
 
-
-
-
-// prescription save
+  // prescription save
   const handleSave = (values) => {
     const data = {
       branchUserId: selectedOfficer,
@@ -330,9 +325,6 @@ const PrescriptionInvoice = () => {
       }
     }
   }, [fetchData]);
-
-
-
 
   // next job id
   const handleCreateJobNumber = async () => {
@@ -547,44 +539,54 @@ const PrescriptionInvoice = () => {
     "-6.00",
   ];
 
-// invoice
+  // invoice
 
-// invoice save
-const handleSaveInvoice = (values) => {
-  const data = {
-    invoiceNo:values.invoNo,
-    localDateTime: values.invoDate,
-    lensType: values.lensTypes,
-    brand: values.brands,
-    coating: values.coatings,
-    tint: values.tints,
-    design: values.designs,
-    balance:1000.0,
-    totalAmount: totalAmount,
-    invoiceItemList: selectedItems.map((item) => ({
-      itemCode: item.code,
-      description: item.desc,
-      salePrice: item.price,
-      qty: item.qty,
-      discount: item.disc,
-      amount: item.amount,
-    })),  
+  // invoice save
+  const handleSaveInvoice = (values) => {
+    console.log("values", values);
+    const data = {
+      // invoiceNo:formInvoKinds.invoNo,
+      // localDateTime: formInvoKinds.invoDate,
+      // lensType: formInvoKinds.lensTypes,
+      // brand: formInvoKinds.brands,
+      // coating: formInvoKinds.coatings,
+      // tint: formInvoKinds.tints,
+      // design: formInvoKinds.designs,
+
+      invoiceNo: values.invoiceNo || null,
+      localDateTime: values.localDateTime || null,
+      lensType: values.lensType || null,
+      brand: values.brand || null,
+      coating: coatingsValue || null,
+      tint: values.tint || null,
+      design: designsValue || null,
+      balance: 1000.0,
+      totalAmount: totalAmount,
+      invoiceItemList: selectedItems.map((item) => ({
+        itemCode: item.code,
+        description: item.desc,
+        salePrice: item.price,
+        qty: item.qty,
+        discount: item.disc,
+        amount: item.amount,
+      })),
+    };
+
+    console.log("invoice data", data);
+
+    fetchInvoiceAction({
+      query: `v1.0/invoice/add`,
+      body: data,
+    });
+
+    if (fetchInvoice && fetchInvoice.status === true) {
+      notifySuccess(fetchInvoice.message);
+    } else {
+      notifyError(fetchInvoice.message);
+    }
+
+    // setLoading(false);
   };
-
-  fetchInvoiceAction({
-    query: `v1.0/invoice/add`,
-    body: data,
-  });
-
-  if (fetchInvoice && fetchInvoice.status === true) {
-    notifySuccess(fetchInvoice.message);
-  } else {
-    notifyError(fetchInvoice.message);
-  }
-
-  // setLoading(false);
-};
-
 
   useEffect(() => {
     if (!searchKeyword && selectedItem) {
@@ -619,7 +621,7 @@ const handleSaveInvoice = (values) => {
     handleSearchItem({ keyword: searchKeyword });
   };
 
-// item click
+  // item click
   const handleAddItem = () => {
     formItem.validateFields().then((values) => {
       const newItem = {
@@ -701,6 +703,10 @@ const handleSaveInvoice = (values) => {
         return null;
     }
   };
+
+  const coatingsValue = formInvo.getFieldValue("coatings");
+  const designsValue = formInvo.getFieldValue("designs");
+  console.log("Coating Value:", coatingsValue, "Design Value:", designsValue);
 
   const renderContent = () => {
     switch (selectedOption) {
@@ -1162,68 +1168,99 @@ const handleSaveInvoice = (values) => {
                 };
                 console.log("Submitted payload:", payload);
                 handleSaveInvoice(payload);
-              }}           >
-              <Form form={formInvoKinds} layout="vertical">
-                <div className="grid grid-cols-12 gap-2 mb-4">
-                  <Form.Item label="Invoice Date" className="col-span-2" name="invoDate">
-                    <DatePicker className="w-full" />
-                  </Form.Item>
+              }}
+            >
+              {/* <Form form={formInvoKinds} layout="vertical"> */}
+              <div className="grid grid-cols-12 gap-2 mb-4">
+                <Form.Item
+                  label="Invoice Date"
+                  className="col-span-2"
+                  name="invoDate"
+                >
+                  <DatePicker className="w-full" />
+                </Form.Item>
 
-                  <Form.Item label="Invoice No" className="col-span-2" name="invoNo">
-                    <Input className="w-full" />
-                  </Form.Item>
+                <Form.Item
+                  label="Invoice No"
+                  className="col-span-2"
+                  name="invoNo"
+                >
+                  <Input className="w-full" />
+                </Form.Item>
 
-                  <Form.Item label="Lens Type" className="col-span-2" name="lensTypes">
-                    <Select placeholder="Lens Type">
-                      {lensTypes.map((value) => (
-                        <Option key={value.id} value={value.id}>
-                          {value.type}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
+                <Form.Item
+                  label="Lens Type"
+                  className="col-span-2"
+                  name="lensTypes"
+                >
+                  <Select placeholder="Lens Type">
+                    {lensTypes.map((value) => (
+                      <Option key={value.id} value={value.id}>
+                        {value.type}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
 
-                  <Form.Item label="Brand" className="col-span-1" name="brands">
-                    <Select placeholder="Brand">
-                      {brands.map((value) => (
-                        <Option key={value.id} value={value.id}>
-                          {value.brandName}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
+                <Form.Item label="Brand" className="col-span-1" name="brands">
+                  <Select placeholder="Brand">
+                    {brands.map((value) => (
+                      <Option key={value.id} value={value.id}>
+                        {value.brandName}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
 
-                  <Form.Item label="Coating" className="col-span-1" name="coatings">
-                    <Select placeholder="Coating">
-                      {coatings.map((value) => (
-                        <Option key={value.id} value={value.id}>
-                          {value.coatingName}
-                        </Option>
-                      ))}
-                    </Select>{" "}
-                  </Form.Item>
+                <Form.Item
+                  label="Coating"
+                  className="col-span-1"
+                  name="coatings"
+                >
+                  <Select
+                    placeholder="Coating"
+                    value={coatingsValue}
+                    onChange={(value) => {
+                      formInvo.setFieldsValue({ coatings: value });
+                      console.log("Selected Coating ID:", value);
+                    }}
+                  >
+                    {coatings.map((value) => (
+                      <Option key={value.id} value={value.id}>
+                        {value.coatingName}
+                      </Option>
+                    ))}
+                  </Select>{" "}
+                </Form.Item>
 
-                  <Form.Item label="Tint" className="col-span-2" name="tints">
-                    <Select placeholder="Tint">
-                      {tints.map((value) => (
-                        <Option key={value.id} value={value.id}>
-                          {value.tintType}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
+                <Form.Item label="Tint" className="col-span-2" name="tints">
+                  <Select placeholder="Tint">
+                    {tints.map((value) => (
+                      <Option key={value.id} value={value.id}>
+                        {value.tintType}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
 
-                  <Form.Item label="Design" className="col-span-2" name="designs">
-                    <Select placeholder="Design">
-                      {designs.map((value) => (
-                        <Option key={value.id} value={value.id}>
-                          {value.designType}
-                        </Option>
-                      ))}
-                    </Select>{" "}
-                  </Form.Item>
+                <Form.Item label="Design" className="col-span-2" name="designs">
+                  <Select
+                    placeholder="Design"
+                    value={designsValue}
+                    onChange={(value) => {
+                      formInvo.setFieldsValue({ designs: value });
+                      console.log("Selected designs ID:", value);
+                    }}
+                  >
+                    {designs.map((value) => (
+                      <Option key={value.id} value={value.id}>
+                        {value.designType}
+                      </Option>
+                    ))}
+                  </Select>{" "}
+                </Form.Item>
 
-                  {/* <Form.Item className="col-span-2 ">
+                {/* <Form.Item className="col-span-2 ">
                     <Button
                       type="default"
                       className="w-full bg-yellow-400"
@@ -1235,7 +1272,7 @@ const handleSaveInvoice = (values) => {
                     </Button>
                   </Form.Item> */}
 
-                  {/* <Form.Item className="col-span-3">
+                {/* <Form.Item className="col-span-3">
                     <Button
                       type="primary"
                       className="w-full"
@@ -1244,8 +1281,9 @@ const handleSaveInvoice = (values) => {
                       Add
                     </Button>
                   </Form.Item> */}
-                </div>
-              </Form>
+              </div>
+
+              {/* </Form> */}
 
               <Form form={formItem}>
                 <div className="grid grid-cols-12 gap-2 mb-4">
@@ -1514,7 +1552,6 @@ const handleSaveInvoice = (values) => {
         return null;
     }
   };
-
 
   return (
     <div className=" bg-white p-4 w-full h-screen">
