@@ -44,7 +44,6 @@ export const ItemContextProvider = ({ children }) => {
     if (fetchSearchData) {
       if (fetchSearchData.success === true) {
         setItemData(fetchSearchData.itemList);
-        // setIsItemTableVisible(true); 
       } else {
         notifyError(fetchSearchData.data);
       }
@@ -69,7 +68,6 @@ export const ItemContextProvider = ({ children }) => {
     { title: "Discount Rs", dataIndex: "discount", key: "discount" },
     { title: "Wholesale", dataIndex: "wholesalePrice", key: "wholesale" }, 
     { title: "Location", dataIndex: "location", key: "location" },
-  
   ];
   
 

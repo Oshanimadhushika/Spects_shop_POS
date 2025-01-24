@@ -21,22 +21,21 @@ import { Link } from "react-router-dom";
 // import Prescription from "./Prescription";
 // import Invoice from "./Invoice";
 import moment from "moment";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import useNotification from "../hooks/useNotification";
 import useFetch from "../hooks/useFetch";
 import {
   DeleteOutlined,
-  DeleteRowOutlined,
+  // DeleteRowOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { ItemContext } from "../context/ItemContext";
 import { SettingContext } from "../context/SettingContext";
 import { UsersInLoggedBranchContext } from "../context/UsersInLoggedBranchContext";
-import { VscLayoutPanelJustify } from "react-icons/vsc";
+// import { VscLayoutPanelJustify } from "react-icons/vsc";
 
 const { Text } = Typography;
-// const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -114,7 +113,6 @@ const PrescriptionInvoice = () => {
 
   const handleOfficerChange = (value) => {
     setSelectedOfficer(value);
-    // console.log("Selected Officer ID:", value);
   };
 
   // search patient
@@ -223,7 +221,6 @@ const PrescriptionInvoice = () => {
     if (fetchJobHistoryData) {
       if (fetchJobHistoryData?.success === true) {
         setHistory(fetchJobHistoryData.list);
-        //console.log("cus histoty", history);
       } else {
         notifyError("Error Fetching Data..!");
       }
@@ -543,16 +540,8 @@ const PrescriptionInvoice = () => {
 
   // invoice save
   const handleSaveInvoice = (values) => {
-    console.log("values", values);
+    // console.log("values", values);
     const data = {
-      // invoiceNo:formInvoKinds.invoNo,
-      // localDateTime: formInvoKinds.invoDate,
-      // lensType: formInvoKinds.lensTypes,
-      // brand: formInvoKinds.brands,
-      // coating: formInvoKinds.coatings,
-      // tint: formInvoKinds.tints,
-      // design: formInvoKinds.designs,
-
       invoiceNo: values.invoiceNo || null,
       localDateTime: values.localDateTime || null,
       lensType: values.lensType || null,
@@ -563,12 +552,14 @@ const PrescriptionInvoice = () => {
       balance: 1000.0,
       totalAmount: totalAmount,
       invoiceItemList: selectedItems.map((item) => ({
-        itemCode: item.code,
-        description: item.desc,
-        salePrice: item.price,
+        itemId: item.code,
         qty: item.qty,
         discount: item.disc,
+        discountAmount:item.discountAmount,
         amount: item.amount,
+        dueBalance:item.dueBalance,
+        // description: item.desc,
+        // salePrice: item.price,
       })),
     };
 
@@ -706,7 +697,6 @@ const PrescriptionInvoice = () => {
 
   const coatingsValue = formInvo.getFieldValue("coatings");
   const designsValue = formInvo.getFieldValue("designs");
-  console.log("Coating Value:", coatingsValue, "Design Value:", designsValue);
 
   const renderContent = () => {
     switch (selectedOption) {
